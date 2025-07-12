@@ -927,22 +927,34 @@ export default function ProfilePage() {
                             placeholder="Label"
                             value={field.label}
                             onChange={(e) => {
-                              // Update contact field logic would go here
-                              // For now, making it read-only to fix the warning
+                              if (isEditing) {
+                                const updatedFields =
+                                  profile.contactFields?.map((f) =>
+                                    f.id === field.id
+                                      ? { ...f, label: e.target.value }
+                                      : f,
+                                  ) || [];
+                                updateField("contactFields", updatedFields);
+                              }
                             }}
                             disabled={!isEditing}
-                            readOnly={!isEditing}
                             className="w-1/3"
                           />
                           <Input
                             placeholder="Value"
                             value={field.value}
                             onChange={(e) => {
-                              // Update contact field logic would go here
-                              // For now, making it read-only to fix the warning
+                              if (isEditing) {
+                                const updatedFields =
+                                  profile.contactFields?.map((f) =>
+                                    f.id === field.id
+                                      ? { ...f, value: e.target.value }
+                                      : f,
+                                  ) || [];
+                                updateField("contactFields", updatedFields);
+                              }
                             }}
                             disabled={!isEditing}
-                            readOnly={!isEditing}
                             className="flex-1"
                           />
                           {isEditing && (
