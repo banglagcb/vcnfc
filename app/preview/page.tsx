@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useProfile } from "@/hooks/use-profile";
+import { useProfileStore } from "@/lib/stores/profile-store";
 import { initializeSampleProfile } from "@/lib/api/profile";
 import type { UserProfile } from "@/lib/types/profile";
 import {
