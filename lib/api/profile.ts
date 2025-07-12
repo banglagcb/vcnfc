@@ -441,16 +441,36 @@ export const initializeSampleProfile = (userId: string) => {
         credentialId: "AWS-SA-12345",
       },
     ],
-    portfolio: [
+    portfolioItems: [
       {
         id: generateId(),
-        title: "E-commerce Platform",
+        title: "NFC Smart Business Cards",
         description:
-          "Full-stack e-commerce platform built with React and Node.js",
-        technologies: ["React", "Node.js", "PostgreSQL", "Stripe"],
-        category: "Web Application",
+          "Revolutionary NFC-enabled business cards that instantly share contact information and social profiles with a simple tap.",
+        technologies: ["NFC", "IoT", "Mobile Apps", "QR Codes"],
+        category: "Hardware + Software",
         featured: true,
         completedDate: "2023-12-01",
+      },
+      {
+        id: generateId(),
+        title: "ShareInfo Platform",
+        description:
+          "Complete digital business card platform with analytics, contact management, and social integration.",
+        technologies: ["React", "Node.js", "Mobile Apps", "Analytics"],
+        category: "Web Platform",
+        featured: true,
+        completedDate: "2024-01-15",
+      },
+      {
+        id: generateId(),
+        title: "Digital Networking Solutions",
+        description:
+          "Suite of professional networking tools including virtual business cards, QR code generators, and contact management.",
+        technologies: ["QR Technology", "Cloud Platform", "Mobile Integration"],
+        category: "Business Solutions",
+        featured: false,
+        completedDate: "2023-08-20",
       },
     ],
     socialLinks: [
