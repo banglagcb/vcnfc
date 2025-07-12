@@ -1,64 +1,75 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User } from "lucide-react"
-import { useStore } from "@/lib/store"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { User } from "lucide-react";
+import { useStore } from "@/lib/store";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function AuthDialog() {
-  const { user, setUser, isAuthenticated } = useStore()
-  const [isOpen, setIsOpen] = useState(false)
-  const [loginData, setLoginData] = useState({ email: "", password: "" })
-  const [registerData, setRegisterData] = useState({ name: "", email: "", password: "", confirmPassword: "" })
-  const router = useRouter()
+  const { user, setUser, isAuthenticated } = useStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const router = useRouter();
 
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Mock login - in real app, this would call an API
     const mockUser = {
       id: "1",
       name: "John Doe",
       email: loginData.email,
-    }
-    setUser(mockUser)
-    setIsOpen(false)
-    setLoginData({ email: "", password: "" })
+    };
+    setUser(mockUser);
+    setIsOpen(false);
+    setLoginData({ email: "", password: "" });
 
     // Redirect to profile page after successful login
-    router.push("/profile")
-  }
+    router.push("/profile");
+  };
 
   const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (registerData.password !== registerData.confirmPassword) {
-      alert("Passwords do not match")
-      return
+      alert("Passwords do not match");
+      return;
     }
     // Mock registration - in real app, this would call an API
     const mockUser = {
       id: "1",
       name: registerData.name,
       email: registerData.email,
-    }
-    setUser(mockUser)
-    setIsOpen(false)
-    setRegisterData({ name: "", email: "", password: "", confirmPassword: "" })
+    };
+    setUser(mockUser);
+    setIsOpen(false);
+    setRegisterData({ name: "", email: "", password: "", confirmPassword: "" });
 
     // Redirect to profile page after successful registration
-    router.push("/profile")
-  }
+    router.push("/profile");
+  };
 
   const handleLogout = () => {
-    setUser(null)
-    router.push("/")
-  }
+    setUser(null);
+    router.push("/");
+  };
 
   if (isAuthenticated()) {
     return (
@@ -69,7 +80,7 @@ export function AuthDialog() {
           Logout
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -97,7 +108,9 @@ export function AuthDialog() {
                   id="email"
                   type="email"
                   value={loginData.email}
-                  onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                  onChange={(e) =>
+                    setLoginData({ ...loginData, email: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -107,11 +120,16 @@ export function AuthDialog() {
                   id="password"
                   type="password"
                   value={loginData.password}
-                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                  onChange={(e) =>
+                    setLoginData({ ...loginData, password: e.target.value })
+                  }
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600">
+              <Button
+                type="submit"
+                className="w-full bg-orange-500 hover:bg-orange-600"
+              >
                 Login
               </Button>
             </form>
@@ -124,7 +142,9 @@ export function AuthDialog() {
                   id="name"
                   type="text"
                   value={registerData.name}
-                  onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                  onChange={(e) =>
+                    setRegisterData({ ...registerData, name: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -134,7 +154,9 @@ export function AuthDialog() {
                   id="reg-email"
                   type="email"
                   value={registerData.email}
-                  onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                  onChange={(e) =>
+                    setRegisterData({ ...registerData, email: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -144,7 +166,12 @@ export function AuthDialog() {
                   id="reg-password"
                   type="password"
                   value={registerData.password}
-                  onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                  onChange={(e) =>
+                    setRegisterData({
+                      ...registerData,
+                      password: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -154,11 +181,19 @@ export function AuthDialog() {
                   id="confirm-password"
                   type="password"
                   value={registerData.confirmPassword}
-                  onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                  onChange={(e) =>
+                    setRegisterData({
+                      ...registerData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600">
+              <Button
+                type="submit"
+                className="w-full bg-orange-500 hover:bg-orange-600"
+              >
                 Register
               </Button>
             </form>
@@ -166,5 +201,5 @@ export function AuthDialog() {
         </Tabs>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
