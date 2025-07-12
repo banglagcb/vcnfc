@@ -28,7 +28,12 @@ export function AuthDialog() {
     password: "",
     confirmPassword: "",
   });
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
