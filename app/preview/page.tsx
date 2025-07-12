@@ -278,7 +278,7 @@ export default function PreviewPage() {
             </div>
 
             {/* Email */}
-            {profile.contactFields
+            {displayProfile.contactFields
               ?.filter((field) => field.type.toLowerCase() === "email")
               .map((emailField, index) => (
                 <div
