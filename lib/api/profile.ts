@@ -373,16 +373,22 @@ export const initializeSampleProfile = (userId: string) => {
     workExperience: [
       {
         id: generateId(),
-        company: "TechCorp Inc.",
-        position: "Senior Software Engineer",
-        startDate: "2022-01-01",
+        company: "SHAREINFO",
+        position: "Managing Director & CEO",
+        startDate: "2020-01-01",
         isCurrent: true,
         description:
-          "Leading a team of 5 developers building scalable web applications using React, Node.js, and AWS.",
-        skills: ["React", "Node.js", "TypeScript", "AWS"],
+          "Leading innovative NFC smart business card technology solutions, transforming traditional networking with cutting-edge digital business cards.",
+        skills: [
+          "NFC Technology",
+          "Business Strategy",
+          "Digital Innovation",
+          "Team Leadership",
+        ],
         achievements: [
-          "Reduced deployment time by 60%",
-          "Mentored 3 junior developers",
+          "Pioneered NFC smart business card technology in Bangladesh",
+          "Built successful tech startup from ground up",
+          "Established market leadership in digital business solutions",
         ],
       },
     ],
