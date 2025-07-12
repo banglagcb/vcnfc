@@ -243,7 +243,7 @@ export default function PreviewPage() {
               ))}
 
             {/* WhatsApp */}
-            {profile.contactFields
+            {displayProfile.contactFields
               ?.filter((field) => field.type.toLowerCase() === "phone")
               .map((phoneField, index) => (
                 <div
