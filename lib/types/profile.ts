@@ -112,6 +112,7 @@ export interface UserProfile {
   // Basic Info
   firstName: string;
   lastName: string;
+  name?: string;
   title: string;
   company: string;
   department?: string;
