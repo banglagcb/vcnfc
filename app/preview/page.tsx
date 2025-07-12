@@ -159,88 +159,225 @@ export default function PreviewPage() {
       </div>
 
       {/* Contact Information */}
-      <div className="bg-gray-50 py-8">
+      <div className="bg-white py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">
-            Contact Information
-          </h2>
+          {/* Professional Introduction */}
+          <div className="text-center mb-8">
+            <p className="text-gray-700 text-lg leading-relaxed max-w-2xl mx-auto">
+              Hello, I am the Managing Director & CEO of SHAREINFO. Working with
+              new technology NFC smart business card.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {profile.contactFields?.map((field, index) => {
-              const getIcon = (type: string) => {
-                switch (type.toLowerCase()) {
-                  case "phone":
-                    return <Phone className="w-5 h-5" />;
-                  case "email":
-                    return <Mail className="w-5 h-5" />;
-                  case "website":
-                    return <Globe className="w-5 h-5" />;
-                  case "address":
-                    return <MapPin className="w-5 h-5" />;
-                  default:
-                    return <MessageCircle className="w-5 h-5" />;
-                }
-              };
+          {/* Action Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <Button
+              onClick={() => downloadVCard(profile)}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full text-base font-medium"
+            >
+              <Download className="w-5 h-5 mr-2" />
+              Save to Phone
+            </Button>
+            <Button
+              onClick={() => shareProfile(profile)}
+              className="bg-slate-600 hover:bg-slate-700 text-white px-8 py-3 rounded-full text-base font-medium"
+            >
+              <Share2 className="w-5 h-5 mr-2" />
+              Share to Friend
+            </Button>
+          </div>
 
-              return (
-                <Card key={index} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-orange-500">
-                        {getIcon(field.type)}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {field.label}
-                        </p>
-                        <p className="text-gray-600 text-sm">{field.value}</p>
+          {/* Contact Details */}
+          <div className="max-w-md mx-auto space-y-6">
+            {/* Phone Numbers */}
+            {profile.contactFields
+              ?.filter((field) => field.type.toLowerCase() === "phone")
+              .map((phoneField, index) => (
+                <div key={`phone-${index}`} className="space-y-3">
+                  <div className="flex items-center space-x-4 py-3">
+                    <div className="w-8 h-8 flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-lg font-medium text-gray-900">
+                        {phoneField.value}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                  </div>
 
-            {/* Social Links */}
+                  <div className="flex items-center space-x-4 py-2">
+                    <div className="w-8 h-8 flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <button
+                      onClick={() =>
+                        window.open(`tel:${phoneField.value}`, "_self")
+                      }
+                      className="flex-1 text-left text-lg text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Call Me
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+            {/* WhatsApp */}
+            {profile.contactFields
+              ?.filter((field) => field.type.toLowerCase() === "phone")
+              .map((phoneField, index) => (
+                <div
+                  key={`whatsapp-${index}`}
+                  className="flex items-center space-x-4 py-3"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <MessageCircle className="w-6 h-6 text-green-500" />
+                  </div>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        `https://wa.me/${phoneField.value.replace(/\D/g, "")}`,
+                        "_blank",
+                      )
+                    }
+                    className="flex-1 text-left text-lg text-gray-700 hover:text-green-600 font-medium"
+                  >
+                    Connect WhatsApp
+                  </button>
+                </div>
+              ))}
+
+            {/* Telegram */}
+            <div className="flex items-center space-x-4 py-3">
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Send className="w-6 h-6 text-blue-400" />
+              </div>
+              <span className="flex-1 text-lg text-gray-700 font-medium">
+                Telegram
+              </span>
+            </div>
+
+            {/* Email */}
+            {profile.contactFields
+              ?.filter((field) => field.type.toLowerCase() === "email")
+              .map((emailField, index) => (
+                <div
+                  key={`email-${index}`}
+                  className="flex items-center space-x-4 py-3"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-red-500" />
+                  </div>
+                  <button
+                    onClick={() =>
+                      window.open(`mailto:${emailField.value}`, "_self")
+                    }
+                    className="flex-1 text-left text-lg text-gray-700 hover:text-red-600 font-medium"
+                  >
+                    {emailField.value}
+                  </button>
+                </div>
+              ))}
+
+            {/* Card Links */}
+            <div className="flex items-center space-x-4 py-3">
+              <div className="w-8 h-8 flex items-center justify-center">
+                <UserPlus className="w-6 h-6 text-blue-600" />
+              </div>
+              <span className="flex-1 text-lg text-gray-700 font-medium">
+                My Card Links
+              </span>
+            </div>
+
+            {/* Website */}
+            {profile.contactFields
+              ?.filter((field) => field.type.toLowerCase() === "website")
+              .map((websiteField, index) => (
+                <div
+                  key={`website-${index}`}
+                  className="flex items-center space-x-4 py-3"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Globe className="w-6 h-6 text-gray-700" />
+                  </div>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        websiteField.value.startsWith("http")
+                          ? websiteField.value
+                          : `https://${websiteField.value}`,
+                        "_blank",
+                      )
+                    }
+                    className="flex-1 text-left text-lg text-gray-700 hover:text-blue-600 font-medium"
+                  >
+                    {websiteField.value}
+                  </button>
+                </div>
+              ))}
+
+            {/* Social Media Links */}
             {profile.socialLinks?.map((link, index) => {
               const getSocialIcon = (platform: string) => {
                 switch (platform.toLowerCase()) {
                   case "facebook":
-                    return <Facebook className="w-5 h-5" />;
+                    return <Facebook className="w-6 h-6 text-blue-600" />;
                   case "twitter":
-                    return <Twitter className="w-5 h-5" />;
+                    return <Twitter className="w-6 h-6 text-blue-400" />;
                   case "instagram":
-                    return <Instagram className="w-5 h-5" />;
+                    return <Instagram className="w-6 h-6 text-pink-500" />;
                   case "linkedin":
-                    return <Linkedin className="w-5 h-5" />;
+                    return <Linkedin className="w-6 h-6 text-blue-700" />;
                   default:
-                    return <Globe className="w-5 h-5" />;
+                    return <Globe className="w-6 h-6 text-gray-600" />;
+                }
+              };
+
+              const getLinkText = (platform: string) => {
+                switch (platform.toLowerCase()) {
+                  case "facebook":
+                    return "View Facebook Profile";
+                  case "twitter":
+                    return "Follow Twitter";
+                  case "instagram":
+                    return "Follow Instagram";
+                  case "linkedin":
+                    return "View LinkedIn Profile";
+                  case "tiktok":
+                    return "Follow TikTok";
+                  default:
+                    return `Visit ${platform}`;
                 }
               };
 
               return (
-                <Card
+                <div
                   key={`social-${index}`}
-                  className="hover:shadow-md transition-shadow"
+                  className="flex items-center space-x-4 py-3"
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-orange-500">
-                        {getSocialIcon(link.platform)}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {link.platform}
-                        </p>
-                        <p className="text-gray-600 text-sm">
-                          Follow {link.platform} Profile
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    {getSocialIcon(link.platform)}
+                  </div>
+                  <button
+                    onClick={() => window.open(link.url, "_blank")}
+                    className="flex-1 text-left text-lg text-gray-700 hover:text-blue-600 font-medium"
+                  >
+                    {getLinkText(link.platform)}
+                  </button>
+                </div>
               );
             })}
+
+            {/* Address */}
+            {profile.location && (
+              <div className="flex items-start space-x-4 py-3">
+                <div className="w-8 h-8 flex items-center justify-center mt-1">
+                  <MapPin className="w-6 h-6 text-red-500" />
+                </div>
+                <div className="flex-1 text-lg text-gray-700 font-medium leading-relaxed">
+                  {profile.location}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
