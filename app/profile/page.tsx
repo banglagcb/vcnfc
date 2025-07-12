@@ -141,6 +141,13 @@ export default function ProfilePage() {
     }
   }, [mounted, isAuthenticated, router]);
 
+  // Sync profile changes to store for real-time preview updates
+  useEffect(() => {
+    if (profile && mounted) {
+      setStoreProfile(profile);
+    }
+  }, [profile, mounted, setStoreProfile]);
+
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
