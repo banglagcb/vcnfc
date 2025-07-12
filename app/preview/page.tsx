@@ -15,11 +15,20 @@ import {
   Star,
   Download,
   QrCode,
+  Share2,
+  ExternalLink,
+  UserPlus,
+  Send,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import {
+  downloadVCard,
+  shareProfile,
+  createContactActions,
+} from "@/lib/utils/vcard";
 import Image from "next/image";
 
 export default function PreviewPage() {
