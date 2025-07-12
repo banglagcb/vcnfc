@@ -148,6 +148,14 @@ export default function ProfilePage() {
     }
   }, [profile, mounted, setStoreProfile]);
 
+  // Enhanced updateField that also updates store for real-time preview
+  const updateFieldWithSync = (field: string, value: any) => {
+    updateField(field, value);
+    if (profile) {
+      updateStoreProfile({ [field]: value });
+    }
+  };
+
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
