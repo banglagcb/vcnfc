@@ -366,7 +366,8 @@ export default function ProfilePage() {
                 disabled={isUploading}
               >
                 <Camera className="w-4 h-4 mr-2" />
-                {isMobile ? "Cover" : "Change Cover"}
+                <span className="sm:hidden">Cover</span>
+                <span className="hidden sm:inline">Change Cover</span>
               </Button>
             </>
           )}
