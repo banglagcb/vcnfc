@@ -898,7 +898,9 @@ export default function ProfilePage() {
                       <Input
                         id="phone"
                         value={profile.phone || ""}
-                        onChange={(e) => updateField("phone", e.target.value)}
+                        onChange={(e) =>
+                          updateFieldWithSync("phone", e.target.value)
+                        }
                         disabled={!isEditing}
                         className="pl-10 mt-1"
                       />
