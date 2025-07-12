@@ -914,7 +914,9 @@ export default function ProfilePage() {
                     <Input
                       id="website"
                       value={profile.website || ""}
-                      onChange={(e) => updateField("website", e.target.value)}
+                      onChange={(e) =>
+                        updateFieldWithSync("website", e.target.value)
+                      }
                       disabled={!isEditing}
                       className="pl-10 mt-1"
                     />
