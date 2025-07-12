@@ -534,13 +534,32 @@ export const initializeSampleProfile = (userId: string) => {
     testimonials: [
       {
         id: generateId(),
-        name: "Sarah Johnson",
-        position: "Product Manager",
-        company: "TechCorp Inc.",
+        clientName: "Mr. Shahidul Islam",
+        clientTitle: "Business Owner",
         content:
-          "John is an exceptional developer who consistently delivers high-quality code and innovative solutions.",
+          "WR Biswas and ShareInfo team delivered an amazing NFC business card solution that revolutionized our networking. The technology is cutting-edge and the service is exceptional.",
         rating: 5,
         dateReceived: "2023-11-15",
+        isPublic: true,
+      },
+      {
+        id: generateId(),
+        clientName: "Ms. Fatima Ahmed",
+        clientTitle: "Marketing Director",
+        content:
+          "The ShareInfo NFC business cards have transformed our client meetings. Professional, innovative, and incredibly convenient. Highly recommended!",
+        rating: 5,
+        dateReceived: "2024-01-10",
+        isPublic: true,
+      },
+      {
+        id: generateId(),
+        clientName: "Mr. Kamal Hassan",
+        clientTitle: "Tech Entrepreneur",
+        content:
+          "Working with WR Biswas was a game-changer. The NFC smart business card technology is exactly what modern businesses need for digital transformation.",
+        rating: 5,
+        dateReceived: "2023-12-20",
         isPublic: true,
       },
     ],
