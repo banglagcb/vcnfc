@@ -211,7 +211,7 @@ export default function PreviewPage() {
           {/* Contact Details */}
           <div className="max-w-md mx-auto space-y-6">
             {/* Phone Numbers */}
-            {profile.contactFields
+            {displayProfile.contactFields
               ?.filter((field) => field.type.toLowerCase() === "phone")
               .map((phoneField, index) => (
                 <div key={`phone-${index}`} className="space-y-3">
