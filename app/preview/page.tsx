@@ -507,10 +507,10 @@ export default function PreviewPage() {
                   className="overflow-hidden hover:shadow-lg transition-shadow group"
                 >
                   <div className="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 relative overflow-hidden">
-                    {item.image ? (
+                    {item.imageUrl ? (
                       <Image
-                        src={item.image}
-                        alt={item.title}
+                        src={item.imageUrl}
+                        alt={item.title || "Portfolio item"}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform"
                       />
