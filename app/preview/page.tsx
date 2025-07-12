@@ -337,7 +337,7 @@ export default function PreviewPage() {
               ))}
 
             {/* Social Media Links */}
-            {profile.socialLinks?.map((link, index) => {
+            {displayProfile.socialLinks?.map((link, index) => {
               const getSocialIcon = (platform: string) => {
                 switch (platform.toLowerCase()) {
                   case "facebook":
