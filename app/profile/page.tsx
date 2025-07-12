@@ -107,6 +107,10 @@ export default function ProfilePage() {
     isSaved,
   } = useProfile(user?.id);
 
+  // Profile store for real-time sync with preview page
+  const { setProfile: setStoreProfile, updateProfile: updateStoreProfile } =
+    useProfileStore();
+
   const { socialLinks, addSocialLink, updateSocialLink, deleteSocialLink } =
     useProfileSocialLinks(profile?.id);
   const {
