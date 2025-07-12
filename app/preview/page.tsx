@@ -88,7 +88,11 @@ export default function PreviewPage() {
             <div className="flex-shrink-0">
               {displayProfile.profileImage ? (
                 <Image
-                  src={displayProfile.profileImage.url}
+                  src={
+                    typeof displayProfile.profileImage === "string"
+                      ? displayProfile.profileImage
+                      : displayProfile.profileImage.url
+                  }
                   alt={displayProfile.name || "Profile"}
                   width={120}
                   height={120}
