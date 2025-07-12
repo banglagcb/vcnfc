@@ -883,7 +883,9 @@ export default function ProfilePage() {
                         id="email"
                         type="email"
                         value={profile.email}
-                        onChange={(e) => updateField("email", e.target.value)}
+                        onChange={(e) =>
+                          updateFieldWithSync("email", e.target.value)
+                        }
                         disabled={!isEditing}
                         className="pl-10 mt-1"
                       />
