@@ -21,7 +21,7 @@ export interface ContactField {
   id: string;
   label: string;
   value: string;
-  type: "email" | "phone" | "url" | "text";
+  type: "email" | "phone" | "url" | "website" | "text";
   icon?: string;
   isPublic: boolean;
   order: number;
