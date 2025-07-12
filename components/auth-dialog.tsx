@@ -76,6 +76,16 @@ export function AuthDialog() {
     router.push("/");
   };
 
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <Button variant="ghost" className="flex items-center space-x-2">
+        <User className="w-5 h-5" />
+        <span className="hidden md:inline">Login</span>
+      </Button>
+    );
+  }
+
   if (isAuthenticated()) {
     return (
       <div className="flex items-center space-x-2">
