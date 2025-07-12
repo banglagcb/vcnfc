@@ -10,12 +10,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { User } from "lucide-react"
 import { useStore } from "@/lib/store"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export function AuthDialog() {
   const { user, setUser, isAuthenticated } = useStore()
   const [isOpen, setIsOpen] = useState(false)
   const [loginData, setLoginData] = useState({ email: "", password: "" })
   const [registerData, setRegisterData] = useState({ name: "", email: "", password: "", confirmPassword: "" })
+  const router = useRouter()
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,6 +30,9 @@ export function AuthDialog() {
     setUser(mockUser)
     setIsOpen(false)
     setLoginData({ email: "", password: "" })
+
+    // Redirect to profile page after successful login
+    router.push("/profile")
   }
 
   const handleRegister = (e: React.FormEvent) => {
@@ -45,10 +50,14 @@ export function AuthDialog() {
     setUser(mockUser)
     setIsOpen(false)
     setRegisterData({ name: "", email: "", password: "", confirmPassword: "" })
+
+    // Redirect to profile page after successful registration
+    router.push("/profile")
   }
 
   const handleLogout = () => {
     setUser(null)
+    router.push("/")
   }
 
   if (isAuthenticated()) {
