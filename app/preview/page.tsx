@@ -128,11 +128,13 @@ export default function PreviewPage() {
 
             {/* Profile Info */}
             <div className="flex-1">
-              <h2 className="text-3xl font-bold mb-2">{profile.name}</h2>
-              <p className="text-xl mb-2 opacity-90">{profile.title}</p>
-              <p className="text-lg mb-4 opacity-80">{profile.location}</p>
+              <h2 className="text-3xl font-bold mb-2">{displayProfile.name}</h2>
+              <p className="text-xl mb-2 opacity-90">{displayProfile.title}</p>
+              <p className="text-lg mb-4 opacity-80">
+                {displayProfile.location}
+              </p>
               <p className="text-base opacity-90 leading-relaxed max-w-2xl">
-                {profile.bio}
+                {displayProfile.bio}
               </p>
 
               {/* Action Buttons */}
