@@ -101,22 +101,31 @@ export function generateVCard(profile: UserProfile): string {
 }
 
 export function downloadVCard(profile: UserProfile): void {
-  const vcardContent = generateVCard(profile);
-  const fileName = `${profile.name?.replace(/\s+/g, "_") || "contact"}.vcf`;
+  try {
+    console.log("Generating vCard for profile:", profile.name);
+    const vcardContent = generateVCard(profile);
+    console.log("Generated vCard content:", vcardContent);
 
-  const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
-  const url = window.URL.createObjectURL(blob);
+    const fileName = `${profile.name?.replace(/\s+/g, "_") || "contact"}.vcf`;
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  link.style.display = "none";
+    const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.style.display = "none";
 
-  window.URL.revokeObjectURL(url);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
+    console.log("vCard download initiated successfully");
+  } catch (error) {
+    console.error("Error downloading vCard:", error);
+    alert("Error downloading vCard. Please try again.");
+  }
 }
 
 export function shareProfile(profile: UserProfile): void {
