@@ -663,7 +663,7 @@ export default function ProfilePage() {
                           id="location"
                           value={profile.location}
                           onChange={(e) =>
-                            updateField("location", e.target.value)
+                            updateFieldWithSync("location", e.target.value)
                           }
                           disabled={!isEditing}
                           className="pl-10 mt-1"
