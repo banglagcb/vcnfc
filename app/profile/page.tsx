@@ -453,9 +453,7 @@ export default function ProfilePage() {
                 variant="outline"
                 size="sm"
                 className="sm:h-10 sm:px-4 sm:py-2"
-                onClick={() =>
-                  window.open(`/user/${profile.customUrl}`, "_blank")
-                }
+                onClick={() => window.open("/preview", "_blank")}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Preview
