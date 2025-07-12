@@ -140,10 +140,22 @@ export default function ProfilePage() {
 
   // Authentication check
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (mounted && !isAuthenticated()) {
       router.push("/");
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <ProfileHeaderSkeleton />
+          <ProfileTabsSkeleton />
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated()) {
     return null;
