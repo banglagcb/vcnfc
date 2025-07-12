@@ -42,21 +42,19 @@ export default function PreviewPage() {
 
   useEffect(() => {
     setMounted(true);
+    // Initialize with sample data immediately to avoid loading spinner
+    const sampleProfile = initializeSampleProfile("sample-user");
+    setDisplayProfile(sampleProfile);
   }, []);
 
   useEffect(() => {
-    if (mounted) {
-      if (profile) {
-        setDisplayProfile(profile);
-      } else if (!loading) {
-        // If no profile exists, create a sample profile for preview
-        const sampleProfile = initializeSampleProfile("sample-user");
-        setDisplayProfile(sampleProfile);
-      }
+    // Update with actual profile data when available (real-time sync)
+    if (profile && mounted) {
+      setDisplayProfile(profile);
     }
-  }, [mounted, profile, loading]);
+  }, [profile, mounted]);
 
-  if (!mounted || loading) {
+  if (!mounted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
@@ -65,18 +63,10 @@ export default function PreviewPage() {
   }
 
   if (!displayProfile) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Loading Profile...
-          </h2>
-          <p className="text-gray-600">
-            Please wait while we load your profile.
-          </p>
-        </div>
-      </div>
-    );
+    // Fallback - should rarely happen now
+    const sampleProfile = initializeSampleProfile("sample-user");
+    setDisplayProfile(sampleProfile);
+    return null;
   }
 
   const generateQRCode = () => {
