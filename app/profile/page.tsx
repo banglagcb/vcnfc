@@ -635,7 +635,7 @@ export default function ProfilePage() {
                           id="company"
                           value={profile.company}
                           onChange={(e) =>
-                            updateField("company", e.target.value)
+                            updateFieldWithSync("company", e.target.value)
                           }
                           disabled={!isEditing}
                           className="mt-1"
