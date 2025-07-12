@@ -80,6 +80,7 @@ import {
   useProfileImageUpload,
   useProfileValidation,
 } from "@/hooks/use-profile";
+import { useProfileStore } from "@/lib/stores/profile-store";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
