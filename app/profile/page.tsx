@@ -459,7 +459,8 @@ export default function ProfilePage() {
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
-                size={isMobile ? "sm" : "default"}
+                size="sm"
+                className="sm:h-10 sm:px-4 sm:py-2"
                 onClick={() =>
                   window.open(`/user/${profile.customUrl}`, "_blank")
                 }
@@ -471,8 +472,10 @@ export default function ProfilePage() {
                 onClick={() =>
                   isEditing ? handleSaveProfile() : setIsEditing(true)
                 }
-                className={cn(currentTheme.buttonClass, "relative")}
-                size={isMobile ? "sm" : "default"}
+                className={cn(
+                  currentTheme.buttonClass,
+                  "relative h-8 px-3 py-1 sm:h-10 sm:px-4 sm:py-2",
+                )}
                 disabled={isSaving}
               >
                 {isSaving ? (
