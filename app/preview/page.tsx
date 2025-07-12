@@ -109,10 +109,10 @@ export default function PreviewPage() {
           <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
             {/* Profile Image */}
             <div className="flex-shrink-0">
-              {profile.profileImage ? (
+              {displayProfile.profileImage ? (
                 <Image
-                  src={profile.profileImage}
-                  alt={profile.name}
+                  src={displayProfile.profileImage}
+                  alt={displayProfile.name}
                   width={120}
                   height={120}
                   className="rounded-lg border-4 border-white/20"
@@ -120,7 +120,7 @@ export default function PreviewPage() {
               ) : (
                 <div className="w-[120px] h-[120px] bg-white/20 rounded-lg border-4 border-white/20 flex items-center justify-center">
                   <span className="text-3xl font-bold">
-                    {profile.name ? profile.name.charAt(0) : "U"}
+                    {displayProfile.name ? displayProfile.name.charAt(0) : "U"}
                   </span>
                 </div>
               )}
