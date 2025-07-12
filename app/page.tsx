@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Phone, Users, Settings, Share2, Mail, Globe, Camera, Star, Check, ChevronDown, Menu, Bell } from "lucide-react"
+import { Phone, Settings, Share2, Mail, Globe, Camera, Star, Check, ChevronDown, Menu, Bell } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
@@ -13,7 +13,6 @@ import { SearchBar } from "@/components/search-bar"
 import { CartSidebar } from "@/components/cart-sidebar"
 import { AuthDialog } from "@/components/auth-dialog"
 import { ProductCard } from "@/components/product-card"
-import { VideoShowcase } from "@/components/video-showcase" // Import the new component
 import { useStore } from "@/lib/store"
 
 export default function ShareinfoLanding() {
@@ -175,84 +174,99 @@ export default function ShareinfoLanding() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-slate-800 to-slate-700 text-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Updated to match screenshot */}
+      <section className="bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 text-white py-16 md:py-24 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 left-10 w-2 h-8 bg-white rounded-full"></div>
+          <div className="absolute top-20 left-20 w-1 h-6 bg-white rounded-full"></div>
+          <div className="absolute top-32 left-16 w-1 h-4 bg-white rounded-full"></div>
+          <div className="absolute top-16 right-32 w-2 h-10 bg-white rounded-full"></div>
+          <div className="absolute top-28 right-40 w-1 h-6 bg-white rounded-full"></div>
+          <div className="absolute top-40 right-36 w-1 h-8 bg-white rounded-full"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 Your flexible friend
                 <br />
                 <span className="text-orange-400">NFC Cards</span>
               </h1>
-              <p className="text-lg md:text-xl mb-6 text-gray-300">Access NFC Cards in Smartphone</p>
-              <p className="text-base md:text-lg mb-8 text-gray-300">Use the QR - & Share Your Link Like a Magic !</p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/products">
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg transition-colors duration-200">
-                    Shop Now
-                  </Button>
-                </Link>
-                <Button
-                  variant="outline"
-                  className="text-white border-white hover:bg-white hover:text-slate-800 px-8 py-3 text-lg bg-transparent"
-                >
-                  Learn More
-                </Button>
-              </div>
+              <p className="text-lg md:text-xl mb-4 text-gray-100">Access NFC Cards in Bangladesh</p>
+              <p className="text-base md:text-lg mb-8 text-gray-100">
+                Use the <span className="text-orange-400 font-semibold">Card</span> &{" "}
+                <span className="text-orange-400 font-semibold">Share</span> Your{" "}
+                <span className="text-orange-400 font-semibold">Info</span> Like a Magic{" "}
+                <span className="text-orange-400 text-2xl">!</span>
+              </p>
             </div>
             <div className="relative flex justify-center lg:justify-end">
-              <div className="relative z-10 w-full max-w-md lg:max-w-none">
+              <div className="relative z-10 w-full max-w-md lg:max-w-lg">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="NFC Cards on phones"
-                  width={600}
-                  height={400}
+                  src="/placeholder.svg?height=500&width=400"
+                  alt="Smartphone showing SHAREINFO profile with hand holding NFC card"
+                  width={400}
+                  height={500}
                   className="w-full h-auto object-contain"
                   priority
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-blue-500/20 rounded-lg blur-3xl"></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      {/* How It Works - Updated to match screenshot */}
+      <section className="py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center p-6 transition-transform duration-300 hover:scale-105">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-8 h-8 bg-orange-500 rounded"></div>
+          <h2 className="text-2xl md:text-3xl font-bold mb-12 text-gray-800">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Card 1 */}
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4 mb-4">
+                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-5 h-5 bg-orange-500 rounded"></div>
+                  </div>
+                  <h3 className="font-semibold text-lg text-gray-800">Get Your SHAREINFO Card</h3>
                 </div>
-                <h3 className="font-semibold mb-2 text-lg">Get Your SHAREINFO Card</h3>
-                <p className="text-gray-600 text-sm">
-                  Get your first free request card from us and start your digital business card journey.
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Take your first step <span className="text-blue-500 font-medium">towards smartness in business</span>{" "}
+                  by placing an order.
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center p-6 transition-transform duration-300 hover:scale-105">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-8 h-8 text-orange-500" />
+
+            {/* Card 2 */}
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4 mb-4">
+                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <h3 className="font-semibold text-lg text-gray-800">Tap or Scan SHAREINFO Card</h3>
                 </div>
-                <h3 className="font-semibold mb-2 text-lg">Tap or Scan SHAREINFO Card</h3>
-                <p className="text-gray-600 text-sm">
-                  Whenever you tap or scan your card, your contact information will be shared instantly.
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Whenever you tap or scan your{" "}
+                  <span className="text-blue-500 font-medium">QR code your profile gets instantly shared</span>
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center p-6 transition-transform duration-300 hover:scale-105">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-orange-500" />
+
+            {/* Card 3 */}
+            <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4 mb-4">
+                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Settings className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <h3 className="font-semibold text-lg text-gray-800">Customize SHAREINFO Card</h3>
                 </div>
-                <h3 className="font-semibold mb-2 text-lg">Customize SHAREINFO Card</h3>
-                <p className="text-gray-600 text-sm">
-                  Customize your card according to your business needs and make it unique.
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  You can customize your card at anytime{" "}
+                  <span className="text-blue-500 font-medium">from your profile according to your need.</span>
                 </p>
               </CardContent>
             </Card>
@@ -260,12 +274,78 @@ export default function ShareinfoLanding() {
         </div>
       </section>
 
-      {/* Video Showcase Section */}
-      <VideoShowcase
-        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ?si=1234567890" // Placeholder YouTube URL
-        title="SHAREINFO NFC SMART BUSINESS CARD"
-        description="Your Flexible friend NFC Cards. Watch how it works!"
-      />
+      {/* Video Showcase Section - Updated to match screenshot */}
+      <section className="py-16 md:py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Video Player */}
+            <div className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] rounded-lg overflow-hidden shadow-xl bg-black">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-700 transition-colors">
+                  <div className="w-0 h-0 border-l-[20px] border-l-white border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent ml-1"></div>
+                </div>
+              </div>
+              <Image
+                src="/placeholder.svg?height=450&width=600"
+                alt="SHAREINFO Digital Visiting Card Demo"
+                width={600}
+                height={450}
+                className="w-full h-full object-cover opacity-80"
+              />
+              <div className="absolute bottom-4 left-4 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
+                Watch on YouTube
+              </div>
+            </div>
+
+            {/* Content */}
+            <div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-800 leading-tight">
+                SHAREINFO
+                <br />
+                NFC SMART
+                <br />
+                BUSINESS CARD
+              </h2>
+              <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+                Your Flexible
+                <br />
+                friend NFC Cards
+              </p>
+
+              {/* Sample Cards */}
+              <div className="grid grid-cols-3 gap-3 mb-8">
+                <div className="aspect-[3/2] bg-gradient-to-br from-blue-600 to-purple-700 rounded-lg shadow-md">
+                  <Image
+                    src="/placeholder.svg?height=120&width=180"
+                    alt="NFC Card Sample 1"
+                    width={180}
+                    height={120}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="aspect-[3/2] bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg shadow-md">
+                  <Image
+                    src="/placeholder.svg?height=120&width=180"
+                    alt="NFC Card Sample 2"
+                    width={180}
+                    height={120}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="aspect-[3/2] bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg shadow-md">
+                  <Image
+                    src="/placeholder.svg?height=120&width=180"
+                    alt="NFC Card Sample 3"
+                    width={180}
+                    height={120}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Featured Products */}
       <section className="py-16 md:py-24">
