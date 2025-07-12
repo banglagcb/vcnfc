@@ -545,46 +545,27 @@ export default function ProfilePage() {
           onValueChange={setActiveTab}
           className="space-y-4 sm:space-y-6"
         >
-          <TabsList
-            className={cn(
-              "grid w-full",
-              isMobile ? "grid-cols-2 h-auto" : "grid-cols-5",
-            )}
-          >
-            {isMobile ? (
-              <>
-                <TabsTrigger value="overview" className="text-xs sm:text-sm">
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value="contact" className="text-xs sm:text-sm">
-                  Contact
-                </TabsTrigger>
-              </>
-            ) : (
-              <>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="contact">Contact Info</TabsTrigger>
-                <TabsTrigger value="social">Social Links</TabsTrigger>
-                <TabsTrigger value="appearance">Appearance</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </>
-            )}
+          {/* Primary Tabs - Always show all tabs but adjust layout */}
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto sm:h-10">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="text-xs sm:text-sm">
+              <span className="sm:hidden">Contact</span>
+              <span className="hidden sm:inline">Contact Info</span>
+            </TabsTrigger>
+            <TabsTrigger value="social" className="text-xs sm:text-sm">
+              <span className="sm:hidden">Social</span>
+              <span className="hidden sm:inline">Social Links</span>
+            </TabsTrigger>
+            <TabsTrigger value="appearance" className="text-xs sm:text-sm">
+              <span className="sm:hidden">Theme</span>
+              <span className="hidden sm:inline">Appearance</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="text-xs sm:text-sm">
+              Settings
+            </TabsTrigger>
           </TabsList>
-
-          {/* Mobile Secondary Tab Navigation */}
-          {isMobile && (
-            <TabsList className="grid w-full grid-cols-3 mt-2">
-              <TabsTrigger value="social" className="text-xs">
-                Social
-              </TabsTrigger>
-              <TabsTrigger value="appearance" className="text-xs">
-                Theme
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="text-xs">
-                Settings
-              </TabsTrigger>
-            </TabsList>
-          )}
 
           {/* Overview Tab */}
           <TabsContent value="overview">
