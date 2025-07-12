@@ -310,7 +310,7 @@ export default function PreviewPage() {
             </div>
 
             {/* Website */}
-            {profile.contactFields
+            {displayProfile.contactFields
               ?.filter((field) => field.type.toLowerCase() === "website")
               .map((websiteField, index) => (
                 <div
