@@ -140,7 +140,7 @@ export default function PreviewPage() {
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3 mt-6">
                 <Button
-                  onClick={() => downloadVCard(profile)}
+                  onClick={() => downloadVCard(displayProfile)}
                   size="sm"
                   className="bg-orange-600 text-white hover:bg-orange-700 border-0"
                 >
@@ -148,7 +148,7 @@ export default function PreviewPage() {
                   Save to Phone
                 </Button>
                 <Button
-                  onClick={() => shareProfile(profile)}
+                  onClick={() => shareProfile(displayProfile)}
                   variant="outline"
                   size="sm"
                   className="border-white text-white hover:bg-white/10 bg-slate-600 hover:bg-slate-700"
