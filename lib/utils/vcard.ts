@@ -24,17 +24,15 @@ export function generateVCard(profile: UserProfile): string {
   vcard.push("VERSION:3.0");
 
   // Name
-  if (profile.name) {
-    // Format: Last;First;Middle;Prefix;Suffix
-    const nameParts = profile.name.split(" ");
-    const firstName = nameParts[0] || "";
-    const lastName =
-      nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
-    const middleName =
-      nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : "";
+  const fullName =
+    profile.name ||
+    `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
+  if (fullName) {
+    const firstName = profile.firstName || "";
+    const lastName = profile.lastName || "";
 
-    vcard.push(`N:${lastName};${firstName};${middleName};;`);
-    vcard.push(`FN:${profile.name}`);
+    vcard.push(`N:${lastName};${firstName};;;`);
+    vcard.push(`FN:${fullName}`);
   }
 
   // Title and Organization
