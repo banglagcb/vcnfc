@@ -92,7 +92,7 @@ export default function PreviewPage() {
               ) : (
                 <div className="w-[120px] h-[120px] bg-white/20 rounded-lg border-4 border-white/20 flex items-center justify-center">
                   <span className="text-3xl font-bold">
-                    {profile.name?.charAt(0) || "U"}
+                    {profile.name ? profile.name.charAt(0) : "U"}
                   </span>
                 </div>
               )}
