@@ -310,36 +310,38 @@ export default function PreviewPage() {
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {profile.skills?.map((skill, index) => (
-              <Card
-                key={index}
-                className="hover:shadow-lg transition-shadow group"
-              >
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <span className="text-white text-xl font-bold">
-                      {skill.name.charAt(0)}
-                    </span>
-                  </div>
-                  <h3 className="font-semibold mb-2">{skill.name}</h3>
-                  <div className="text-sm text-gray-600 mb-2">
-                    Level: {skill.level}
-                  </div>
-                  <Progress
-                    value={
-                      skill.level === "Expert"
-                        ? 95
-                        : skill.level === "Advanced"
-                          ? 80
-                          : skill.level === "Intermediate"
-                            ? 65
-                            : 45
-                    }
-                    className="h-2"
-                  />
-                </CardContent>
-              </Card>
-            ))}
+            {profile.skills
+              ?.filter((skill) => skill && skill.name)
+              .map((skill, index) => (
+                <Card
+                  key={index}
+                  className="hover:shadow-lg transition-shadow group"
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                      <span className="text-white text-xl font-bold">
+                        {skill.name ? skill.name.charAt(0) : "S"}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold mb-2">{skill.name}</h3>
+                    <div className="text-sm text-gray-600 mb-2">
+                      Level: {skill.level}
+                    </div>
+                    <Progress
+                      value={
+                        skill.level === "Expert"
+                          ? 95
+                          : skill.level === "Advanced"
+                            ? 80
+                            : skill.level === "Intermediate"
+                              ? 65
+                              : 45
+                      }
+                      className="h-2"
+                    />
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
       </div>
@@ -352,46 +354,48 @@ export default function PreviewPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {profile.portfolioItems?.map((item, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden hover:shadow-lg transition-shadow group"
-              >
-                <div className="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 relative overflow-hidden">
-                  {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white">
-                      <span className="text-4xl font-bold">
-                        {item.title.charAt(0)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {item.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {item.technologies?.slice(0, 3).map((tech, techIndex) => (
-                      <Badge
-                        key={techIndex}
-                        variant="secondary"
-                        className="text-xs"
-                      >
-                        {tech}
-                      </Badge>
-                    ))}
+            {profile.portfolioItems
+              ?.filter((item) => item && item.title)
+              .map((item, index) => (
+                <Card
+                  key={index}
+                  className="overflow-hidden hover:shadow-lg transition-shadow group"
+                >
+                  <div className="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 relative overflow-hidden">
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white">
+                        <span className="text-4xl font-bold">
+                          {item.title ? item.title.charAt(0) : "P"}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold mb-2">{item.title}</h3>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {item.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {item.technologies?.slice(0, 3).map((tech, techIndex) => (
+                        <Badge
+                          key={techIndex}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
       </div>
@@ -427,42 +431,46 @@ export default function PreviewPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {profile.testimonials?.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                      {testimonial.clientName.charAt(0)}
+            {profile.testimonials
+              ?.filter((testimonial) => testimonial && testimonial.clientName)
+              .map((testimonial, index) => (
+                <Card key={index} className="hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                        {testimonial.clientName
+                          ? testimonial.clientName.charAt(0)
+                          : "C"}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">
+                          {testimonial.clientName}
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {testimonial.clientTitle}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold">
-                        {testimonial.clientName}
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        {testimonial.clientTitle}
-                      </p>
+
+                    <div className="flex mb-3">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < testimonial.rating
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
                     </div>
-                  </div>
 
-                  <div className="flex mb-3">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < testimonial.rating
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-gray-700 italic">
-                    &ldquo;{testimonial.content}&rdquo;
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+                    <p className="text-gray-700 italic">
+                      &ldquo;{testimonial.content}&rdquo;
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
       </div>
