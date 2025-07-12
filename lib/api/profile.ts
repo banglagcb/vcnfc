@@ -452,12 +452,30 @@ export const initializeSampleProfile = (userId: string) => {
     contactFields: [
       {
         id: generateId(),
-        label: "WhatsApp",
-        value: "+1 (555) 123-4567",
+        label: "Phone",
+        value: "+8801723-128440",
         type: "phone",
         icon: "phone",
         isPublic: true,
         order: 1,
+      },
+      {
+        id: generateId(),
+        label: "Email",
+        value: "wr.biswas21@gmail.com",
+        type: "email",
+        icon: "email",
+        isPublic: true,
+        order: 2,
+      },
+      {
+        id: generateId(),
+        label: "Website",
+        value: "www.sales.shareinfobd.com",
+        type: "website",
+        icon: "website",
+        isPublic: true,
+        order: 3,
       },
     ],
     testimonials: [
