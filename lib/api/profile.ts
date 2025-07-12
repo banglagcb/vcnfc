@@ -1,0 +1,490 @@
+import type {
+  UserProfile,
+  CreateProfilePayload,
+  ProfileUpdatePayload,
+  ProfileResponse,
+  ProfileAnalyticsResponse,
+  ProfileError,
+  SocialLink,
+  ContactField,
+  Skill,
+  Achievement,
+  WorkExperience,
+  PortfolioItem,
+  Testimonial,
+  ProfileImage,
+} from "@/lib/types/profile";
+
+// Simulated API delay for development
+const API_DELAY = 500;
+
+// Mock database
+let mockProfiles: UserProfile[] = [];
+let mockAnalytics: any[] = [];
+
+// Utility function to simulate API calls
+const simulateAPI = <T>(data: T, delay = API_DELAY): Promise<T> => {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(data), delay);
+  });
+};
+
+// Generate unique IDs
+const generateId = () => Math.random().toString(36).substr(2, 9);
+
+// Profile CRUD operations
+export const profileAPI = {
+  // Get profile by ID
+  async getProfile(id: string): Promise<ProfileResponse | ProfileError> {
+    try {
+      const profile = mockProfiles.find((p) => p.id === id);
+      if (!profile) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+      return await simulateAPI({ profile, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to fetch profile" },
+      };
+    }
+  },
+
+  // Get profile by user ID
+  async getProfileByUserId(
+    userId: string,
+  ): Promise<ProfileResponse | ProfileError> {
+    try {
+      const profile = mockProfiles.find((p) => p.userId === userId);
+      if (!profile) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+      return await simulateAPI({ profile, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to fetch profile" },
+      };
+    }
+  },
+
+  // Create new profile
+  async createProfile(
+    data: CreateProfilePayload,
+  ): Promise<ProfileResponse | ProfileError> {
+    try {
+      const now = new Date().toISOString();
+      const newProfile: UserProfile = {
+        id: generateId(),
+        userId: data.userId,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        title: data.title,
+        company: data.company,
+        department: data.department,
+        bio: data.bio,
+        location: data.location,
+        timezone: "UTC",
+        email: data.email,
+        phone: data.phone,
+        website: data.website,
+        address: data.address,
+        workExperience: [],
+        skills: [],
+        achievements: [],
+        portfolio: [],
+        socialLinks: [],
+        contactFields: [],
+        testimonials: [],
+        settings: {
+          isPublic: true,
+          showAnalytics: true,
+          allowContact: true,
+          allowDownload: true,
+          theme: "modern",
+        },
+        customUrl: data.customUrl,
+        analytics: [],
+        createdAt: now,
+        updatedAt: now,
+        isVerified: false,
+        isPremium: false,
+      };
+
+      mockProfiles.push(newProfile);
+      return await simulateAPI({ profile: newProfile, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to create profile" },
+      };
+    }
+  },
+
+  // Update profile
+  async updateProfile(
+    data: ProfileUpdatePayload,
+  ): Promise<ProfileResponse | ProfileError> {
+    try {
+      const profileIndex = mockProfiles.findIndex((p) => p.id === data.id);
+      if (profileIndex === -1) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+
+      const updatedProfile = {
+        ...mockProfiles[profileIndex],
+        ...data,
+        updatedAt: new Date().toISOString(),
+      };
+
+      mockProfiles[profileIndex] = updatedProfile;
+      return await simulateAPI({ profile: updatedProfile, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to update profile" },
+      };
+    }
+  },
+
+  // Delete profile
+  async deleteProfile(
+    id: string,
+  ): Promise<{ success: boolean } | ProfileError> {
+    try {
+      const profileIndex = mockProfiles.findIndex((p) => p.id === id);
+      if (profileIndex === -1) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+
+      mockProfiles.splice(profileIndex, 1);
+      return await simulateAPI({ success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to delete profile" },
+      };
+    }
+  },
+
+  // Upload profile image
+  async uploadProfileImage(
+    profileId: string,
+    file: File,
+  ): Promise<{ image: ProfileImage; success: boolean } | ProfileError> {
+    try {
+      // Simulate image upload
+      const imageUrl = URL.createObjectURL(file);
+      const image: ProfileImage = {
+        id: generateId(),
+        url: imageUrl,
+        alt: `Profile image for ${profileId}`,
+        size: file.size,
+        type: file.type,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Update profile with new image
+      const profileIndex = mockProfiles.findIndex((p) => p.id === profileId);
+      if (profileIndex !== -1) {
+        mockProfiles[profileIndex].profileImage = image;
+        mockProfiles[profileIndex].updatedAt = new Date().toISOString();
+      }
+
+      return await simulateAPI({ image, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "UPLOAD_ERROR", message: "Failed to upload image" },
+      };
+    }
+  },
+
+  // Social Links CRUD
+  async addSocialLink(
+    profileId: string,
+    socialLink: Omit<SocialLink, "id">,
+  ): Promise<{ socialLink: SocialLink; success: boolean } | ProfileError> {
+    try {
+      const newSocialLink: SocialLink = { ...socialLink, id: generateId() };
+      const profileIndex = mockProfiles.findIndex((p) => p.id === profileId);
+
+      if (profileIndex === -1) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+
+      mockProfiles[profileIndex].socialLinks.push(newSocialLink);
+      mockProfiles[profileIndex].updatedAt = new Date().toISOString();
+
+      return await simulateAPI({ socialLink: newSocialLink, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to add social link" },
+      };
+    }
+  },
+
+  async updateSocialLink(
+    profileId: string,
+    socialLinkId: string,
+    updates: Partial<SocialLink>,
+  ): Promise<{ socialLink: SocialLink; success: boolean } | ProfileError> {
+    try {
+      const profileIndex = mockProfiles.findIndex((p) => p.id === profileId);
+      if (profileIndex === -1) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+
+      const socialLinkIndex = mockProfiles[profileIndex].socialLinks.findIndex(
+        (sl) => sl.id === socialLinkId,
+      );
+      if (socialLinkIndex === -1) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Social link not found" },
+        };
+      }
+
+      const updatedSocialLink = {
+        ...mockProfiles[profileIndex].socialLinks[socialLinkIndex],
+        ...updates,
+      };
+      mockProfiles[profileIndex].socialLinks[socialLinkIndex] =
+        updatedSocialLink;
+      mockProfiles[profileIndex].updatedAt = new Date().toISOString();
+
+      return await simulateAPI({
+        socialLink: updatedSocialLink,
+        success: true,
+      });
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: "SERVER_ERROR",
+          message: "Failed to update social link",
+        },
+      };
+    }
+  },
+
+  async deleteSocialLink(
+    profileId: string,
+    socialLinkId: string,
+  ): Promise<{ success: boolean } | ProfileError> {
+    try {
+      const profileIndex = mockProfiles.findIndex((p) => p.id === profileId);
+      if (profileIndex === -1) {
+        return {
+          success: false,
+          error: { code: "NOT_FOUND", message: "Profile not found" },
+        };
+      }
+
+      mockProfiles[profileIndex].socialLinks = mockProfiles[
+        profileIndex
+      ].socialLinks.filter((sl) => sl.id !== socialLinkId);
+      mockProfiles[profileIndex].updatedAt = new Date().toISOString();
+
+      return await simulateAPI({ success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: "SERVER_ERROR",
+          message: "Failed to delete social link",
+        },
+      };
+    }
+  },
+
+  // Analytics
+  async getProfileAnalytics(
+    profileId: string,
+    days = 30,
+  ): Promise<ProfileAnalyticsResponse | ProfileError> {
+    try {
+      // Generate mock analytics data
+      const analytics = {
+        id: generateId(),
+        profileId,
+        views: Math.floor(Math.random() * 1000),
+        contacts: Math.floor(Math.random() * 100),
+        shares: Math.floor(Math.random() * 50),
+        cardTaps: Math.floor(Math.random() * 200),
+        date: new Date().toISOString(),
+      };
+
+      const trends = {
+        viewsChange: Math.floor(Math.random() * 50) - 25,
+        contactsChange: Math.floor(Math.random() * 20) - 10,
+        sharesChange: Math.floor(Math.random() * 10) - 5,
+      };
+
+      return await simulateAPI({ analytics, trends, success: true });
+    } catch (error) {
+      return {
+        success: false,
+        error: { code: "SERVER_ERROR", message: "Failed to fetch analytics" },
+      };
+    }
+  },
+};
+
+// Initialize with sample data
+export const initializeSampleProfile = (userId: string) => {
+  const sampleProfile: UserProfile = {
+    id: generateId(),
+    userId,
+    firstName: "John",
+    lastName: "Doe",
+    title: "Senior Software Engineer",
+    company: "TechCorp Inc.",
+    department: "Engineering",
+    bio: "Passionate software engineer with 8+ years of experience in full-stack development. I love creating innovative solutions and mentoring junior developers.",
+    location: "San Francisco, CA",
+    timezone: "America/Los_Angeles",
+    email: "john.doe@techcorp.com",
+    phone: "+1 (555) 123-4567",
+    website: "https://johndoe.dev",
+    address: "123 Tech Street, San Francisco, CA 94105",
+    workExperience: [
+      {
+        id: generateId(),
+        company: "TechCorp Inc.",
+        position: "Senior Software Engineer",
+        startDate: "2022-01-01",
+        isCurrent: true,
+        description:
+          "Leading a team of 5 developers building scalable web applications using React, Node.js, and AWS.",
+        skills: ["React", "Node.js", "TypeScript", "AWS"],
+        achievements: [
+          "Reduced deployment time by 60%",
+          "Mentored 3 junior developers",
+        ],
+      },
+    ],
+    skills: [
+      {
+        id: generateId(),
+        name: "React",
+        level: "expert",
+        category: "Frontend",
+        yearsOfExperience: 5,
+        isEndorsed: true,
+        endorsements: 15,
+      },
+      {
+        id: generateId(),
+        name: "TypeScript",
+        level: "advanced",
+        category: "Programming Language",
+        yearsOfExperience: 4,
+        isEndorsed: true,
+        endorsements: 12,
+      },
+    ],
+    achievements: [
+      {
+        id: generateId(),
+        title: "AWS Certified Solutions Architect",
+        description:
+          "Professional level certification for designing distributed systems on AWS",
+        issuer: "Amazon Web Services",
+        dateEarned: "2023-06-15",
+        credentialId: "AWS-SA-12345",
+      },
+    ],
+    portfolio: [
+      {
+        id: generateId(),
+        title: "E-commerce Platform",
+        description:
+          "Full-stack e-commerce platform built with React and Node.js",
+        technologies: ["React", "Node.js", "PostgreSQL", "Stripe"],
+        category: "Web Application",
+        featured: true,
+        completedDate: "2023-12-01",
+      },
+    ],
+    socialLinks: [
+      {
+        id: generateId(),
+        platform: "LinkedIn",
+        url: "https://linkedin.com/in/johndoe",
+        icon: "linkedin",
+        displayName: "johndoe",
+        isPublic: true,
+        order: 1,
+      },
+      {
+        id: generateId(),
+        platform: "GitHub",
+        url: "https://github.com/johndoe",
+        icon: "github",
+        displayName: "johndoe",
+        isPublic: true,
+        order: 2,
+      },
+    ],
+    contactFields: [
+      {
+        id: generateId(),
+        label: "WhatsApp",
+        value: "+1 (555) 123-4567",
+        type: "phone",
+        icon: "phone",
+        isPublic: true,
+        order: 1,
+      },
+    ],
+    testimonials: [
+      {
+        id: generateId(),
+        name: "Sarah Johnson",
+        position: "Product Manager",
+        company: "TechCorp Inc.",
+        content:
+          "John is an exceptional developer who consistently delivers high-quality code and innovative solutions.",
+        rating: 5,
+        dateReceived: "2023-11-15",
+        isPublic: true,
+      },
+    ],
+    settings: {
+      isPublic: true,
+      showAnalytics: true,
+      allowContact: true,
+      allowDownload: true,
+      theme: "modern",
+    },
+    customUrl: "john-doe-engineer",
+    analytics: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    isVerified: true,
+    isPremium: true,
+  };
+
+  mockProfiles.push(sampleProfile);
+  return sampleProfile;
+};
