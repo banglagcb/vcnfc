@@ -35,25 +35,16 @@ import {
 import Image from "next/image";
 
 export default function PreviewPage() {
-  const { profile, loading } = useProfile();
+  const { profile: storeProfile, initializeProfile } = useProfileStore();
   const [mounted, setMounted] = useState(false);
-  const [displayProfile, setDisplayProfile] = useState<UserProfile | null>(
-    null,
-  );
 
   useEffect(() => {
     setMounted(true);
-    // Initialize with sample data immediately to avoid loading spinner
-    const sampleProfile = initializeSampleProfile("sample-user");
-    setDisplayProfile(sampleProfile);
-  }, []);
-
-  useEffect(() => {
-    // Update with actual profile data when available (real-time sync)
-    if (profile && mounted) {
-      setDisplayProfile(profile);
+    // Initialize profile in store if not exists
+    if (!storeProfile) {
+      initializeProfile();
     }
-  }, [profile, mounted]);
+  }, [storeProfile, initializeProfile]);
 
   if (!mounted) {
     return (
