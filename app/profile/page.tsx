@@ -647,7 +647,9 @@ export default function ProfilePage() {
                       <Textarea
                         id="bio"
                         value={profile.bio}
-                        onChange={(e) => updateField("bio", e.target.value)}
+                        onChange={(e) =>
+                          updateFieldWithSync("bio", e.target.value)
+                        }
                         disabled={!isEditing}
                         rows={3}
                         className="mt-1 resize-none"
