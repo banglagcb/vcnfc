@@ -134,7 +134,7 @@ export interface UserProfile {
   workExperience: WorkExperience[];
   skills: Skill[];
   achievements: Achievement[];
-  portfolio: PortfolioItem[];
+  portfolioItems: PortfolioItem[];
 
   // Social & Contact
   socialLinks: SocialLink[];
