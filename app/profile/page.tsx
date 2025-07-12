@@ -622,7 +622,9 @@ export default function ProfilePage() {
                         <Input
                           id="title"
                           value={profile.title}
-                          onChange={(e) => updateField("title", e.target.value)}
+                          onChange={(e) =>
+                            updateFieldWithSync("title", e.target.value)
+                          }
                           disabled={!isEditing}
                           className="mt-1"
                         />
