@@ -124,17 +124,9 @@ export default function ProfilePage() {
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const coverImageInputRef = useRef<HTMLInputElement>(null);
 
-  // Hydration and responsive design detection
+  // Hydration detection
   useEffect(() => {
     setMounted(true);
-
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkIsMobile();
-    window.addEventListener("resize", checkIsMobile);
-    return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
   // Authentication check
