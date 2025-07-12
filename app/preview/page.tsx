@@ -478,7 +478,7 @@ export default function PreviewPage() {
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {profile.skills
+            {displayProfile.skills
               ?.filter((skill) => skill && skill.name)
               .map((skill, index) => (
                 <Card
