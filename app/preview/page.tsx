@@ -88,8 +88,8 @@ export default function PreviewPage() {
             <div className="flex-shrink-0">
               {displayProfile.profileImage ? (
                 <Image
-                  src={displayProfile.profileImage}
-                  alt={displayProfile.name}
+                  src={displayProfile.profileImage.url}
+                  alt={displayProfile.name || "Profile"}
                   width={120}
                   height={120}
                   className="rounded-lg border-4 border-white/20"
