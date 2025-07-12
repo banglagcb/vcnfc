@@ -164,7 +164,7 @@ export default function PreviewPage() {
               <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
                 <h3 className="font-semibold mb-3">Services</h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {profile.skills?.slice(0, 4).map((skill, index) => (
+                  {displayProfile.skills?.slice(0, 4).map((skill, index) => (
                     <div
                       key={index}
                       className="bg-white/20 rounded p-2 text-center text-sm"
