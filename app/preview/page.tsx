@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useProfile } from "@/hooks/use-profile";
+import { initializeSampleProfile } from "@/lib/api/profile";
+import type { UserProfile } from "@/lib/types/profile";
 import {
   Phone,
   Mail,
@@ -34,10 +36,25 @@ import Image from "next/image";
 export default function PreviewPage() {
   const { profile, loading } = useProfile();
   const [mounted, setMounted] = useState(false);
+  const [displayProfile, setDisplayProfile] = useState<UserProfile | null>(
+    null,
+  );
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      if (profile) {
+        setDisplayProfile(profile);
+      } else if (!loading) {
+        // If no profile exists, create a sample profile for preview
+        const sampleProfile = initializeSampleProfile("sample-user");
+        setDisplayProfile(sampleProfile);
+      }
+    }
+  }, [mounted, profile, loading]);
 
   if (!mounted || loading) {
     return (
@@ -47,14 +64,16 @@ export default function PreviewPage() {
     );
   }
 
-  if (!profile) {
+  if (!displayProfile) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            No Profile Found
+            Loading Profile...
           </h2>
-          <p className="text-gray-600">Please create a profile first.</p>
+          <p className="text-gray-600">
+            Please wait while we load your profile.
+          </p>
         </div>
       </div>
     );
