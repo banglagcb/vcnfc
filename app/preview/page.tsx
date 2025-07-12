@@ -389,13 +389,13 @@ export default function PreviewPage() {
             })}
 
             {/* Address */}
-            {profile.location && (
+            {displayProfile.location && (
               <div className="flex items-start space-x-4 py-3">
                 <div className="w-8 h-8 flex items-center justify-center mt-1">
                   <MapPin className="w-6 h-6 text-red-500" />
                 </div>
                 <div className="flex-1 text-lg text-gray-700 font-medium leading-relaxed">
-                  {profile.location}
+                  {displayProfile.location}
                 </div>
               </div>
             )}
