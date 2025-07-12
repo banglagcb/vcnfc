@@ -193,14 +193,14 @@ export default function PreviewPage() {
           {/* Action Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <Button
-              onClick={() => downloadVCard(profile)}
+              onClick={() => downloadVCard(displayProfile)}
               className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full text-base font-medium"
             >
               <Download className="w-5 h-5 mr-2" />
               Save to Phone
             </Button>
             <Button
-              onClick={() => shareProfile(profile)}
+              onClick={() => shareProfile(displayProfile)}
               className="bg-slate-600 hover:bg-slate-700 text-white px-8 py-3 rounded-full text-base font-medium"
             >
               <Share2 className="w-5 h-5 mr-2" />
