@@ -84,7 +84,11 @@ export function generateVCard(profile: UserProfile): string {
 
   // Photo
   if (profile.profileImage) {
-    vcard.push(`PHOTO;VALUE=URL:${profile.profileImage}`);
+    const imageUrl =
+      typeof profile.profileImage === "string"
+        ? profile.profileImage
+        : profile.profileImage.url;
+    vcard.push(`PHOTO;VALUE=URL:${imageUrl}`);
   }
 
   // Social Links as URLs
