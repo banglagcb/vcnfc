@@ -125,8 +125,10 @@ export default function ProfilePage() {
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const coverImageInputRef = useRef<HTMLInputElement>(null);
 
-  // Responsive design detection
+  // Hydration and responsive design detection
   useEffect(() => {
+    setMounted(true);
+
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
