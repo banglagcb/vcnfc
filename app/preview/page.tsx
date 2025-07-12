@@ -119,20 +119,21 @@ export default function PreviewPage() {
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3 mt-6">
                 <Button
-                  variant="secondary"
+                  onClick={() => downloadVCard(profile)}
                   size="sm"
-                  className="bg-white text-orange-600 hover:bg-gray-100"
+                  className="bg-orange-600 text-white hover:bg-orange-700 border-0"
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Download vCard
+                  Save to Phone
                 </Button>
                 <Button
+                  onClick={() => shareProfile(profile)}
                   variant="outline"
                   size="sm"
-                  className="border-white text-white hover:bg-white/10"
+                  className="border-white text-white hover:bg-white/10 bg-slate-600 hover:bg-slate-700"
                 >
-                  <QrCode className="w-4 h-4 mr-2" />
-                  Share Profile
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share to Friend
                 </Button>
               </div>
             </div>
