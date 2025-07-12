@@ -355,18 +355,21 @@ export const initializeSampleProfile = (userId: string) => {
   const sampleProfile: UserProfile = {
     id: generateId(),
     userId,
-    firstName: "John",
-    lastName: "Doe",
-    title: "Senior Software Engineer",
-    company: "TechCorp Inc.",
-    department: "Engineering",
-    bio: "Passionate software engineer with 8+ years of experience in full-stack development. I love creating innovative solutions and mentoring junior developers.",
-    location: "San Francisco, CA",
-    timezone: "America/Los_Angeles",
-    email: "john.doe@techcorp.com",
-    phone: "+1 (555) 123-4567",
-    website: "https://johndoe.dev",
-    address: "123 Tech Street, San Francisco, CA 94105",
+    firstName: "WR",
+    lastName: "Biswas",
+    name: "WR Biswas",
+    title: "Managing Director & CEO",
+    company: "SHAREINFO",
+    department: "Executive",
+    bio: "Hello, I am the Managing Director & CEO of SHAREINFO. Working with new technology NFC smart business card.",
+    location:
+      "764, 5th Floor, West Shewrapara, Mirpur, Dhaka-1216 (Metro Rail Pillar No 304)",
+    timezone: "Asia/Dhaka",
+    email: "wr.biswas21@gmail.com",
+    phone: "+8801723-128440",
+    website: "https://www.sales.shareinfobd.com",
+    address:
+      "764, 5th Floor, West Shewrapara, Mirpur, Dhaka-1216 (Metro Rail Pillar No 304)",
     workExperience: [
       {
         id: generateId(),
