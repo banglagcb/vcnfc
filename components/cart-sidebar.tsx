@@ -57,15 +57,19 @@ export function CartSidebar() {
           <SheetTitle>Shopping Cart ({itemsCount} items)</SheetTitle>
         </SheetHeader>
         <div className="mt-6 space-y-4">
-          {cart.length === 0 ? (
+          {!mounted || cart.length === 0 ? (
             <div className="text-center py-8">
               <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">Your cart is empty</p>
-              <Link href="/products">
-                <Button className="mt-4 bg-orange-500 hover:bg-orange-600">
-                  Continue Shopping
-                </Button>
-              </Link>
+              <p className="text-gray-500">
+                {!mounted ? "Loading..." : "Your cart is empty"}
+              </p>
+              {mounted && (
+                <Link href="/products">
+                  <Button className="mt-4 bg-orange-500 hover:bg-orange-600">
+                    Continue Shopping
+                  </Button>
+                </Link>
+              )}
             </div>
           ) : (
             <>
