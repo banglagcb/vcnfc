@@ -82,6 +82,7 @@ import {
   useProfileValidation,
 } from "@/hooks/use-profile";
 import { useProfileStore } from "@/lib/stores/profile-store";
+import { useRealTimeSync } from "@/hooks/use-real-time-sync";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
