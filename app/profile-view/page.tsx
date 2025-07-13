@@ -46,10 +46,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function ProfileViewPage() {
-  const { profile, initializeProfile } = useProfileStore();
+  const { initializeProfile } = useProfileStore();
+  const { profile, lastUpdateTime, isRecentlyUpdated } =
+    useRealTimeProfileView();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -57,13 +58,6 @@ export default function ProfileViewPage() {
       initializeProfile();
     }
   }, [profile, initializeProfile]);
-
-  // Track real-time updates and show last update time
-  useEffect(() => {
-    if (profile && mounted) {
-      setLastUpdated(new Date().toLocaleTimeString());
-    }
-  }, [profile, mounted]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard
