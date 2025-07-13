@@ -35,7 +35,9 @@
     "health-check": "bash scripts/deploy.sh --health-check",
     "monitoring:setup": "tsx scripts/setup-monitoring.ts",
     "logs": "tail -f app.log",
-    "backup": "tsx scripts/backup.ts"
+    "backup": "tsx scripts/backup.ts",
+    "production-check": "tsx scripts/production-check.ts",
+    "setup-env": "tsx scripts/setup-env.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
