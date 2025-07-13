@@ -128,11 +128,26 @@ export default function ProfileViewPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Profile Information
-              </h1>
+              <div className="flex items-center space-x-3">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Profile Information
+                </h1>
+                {lastUpdated && (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-green-600 font-medium">
+                      Live
+                    </span>
+                  </div>
+                )}
+              </div>
               <p className="text-sm text-gray-600">
                 Complete profile overview and details
+                {lastUpdated && (
+                  <span className="ml-2 text-xs text-gray-400">
+                    • Updated {lastUpdated}
+                  </span>
+                )}
               </p>
             </div>
             <div className="flex space-x-3">
