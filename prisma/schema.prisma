@@ -33,12 +33,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+    refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -178,8 +178,8 @@ model WorkExperience {
   endDate      String?
   isCurrent    Boolean  @default(false)
   description  String?
-  skills       String[] // Array of skill names
-  achievements String[] // Array of achievements
+    skills       String? // JSON array of skill names
+  achievements String? // JSON array of achievements
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -214,7 +214,7 @@ model PortfolioItem {
   imageId       String?
   projectUrl    String?
   repositoryUrl String?
-  technologies  String[] // Array of technology names
+    technologies  String? // JSON array of technology names
   category      String?
   featured      Boolean  @default(false)
   completedDate String?
@@ -249,7 +249,7 @@ model ProfileAnalytic {
   id        String   @id @default(cuid())
   profileId String
   event     String   // view, download, share, contact
-  metadata  Json?    // Additional data
+    metadata  String?    // JSON string for additional data
   userAgent String?
   ipAddress String?
   country   String?
