@@ -13,13 +13,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User } from "lucide-react";
-import { useStore } from "@/lib/store";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { User, Loader2, AlertCircle, CheckCircle } from "lucide-react";
+import { useAuthStore } from "@/lib/stores/auth-store";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export function AuthDialog() {
-  const { user, setUser, isAuthenticated } = useStore();
+  const {
+    user,
+    isLoading,
+    error,
+    login,
+    register,
+    logout,
+    isAuthenticated,
+    clearError,
+    initializeAuth,
+  } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [registerData, setRegisterData] = useState({
@@ -29,50 +40,128 @@ export function AuthDialog() {
     confirmPassword: "",
   });
   const [mounted, setMounted] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    initializeAuth();
+  }, [initializeAuth]);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Mock login - in real app, this would call an API
-    const mockUser = {
-      id: "1",
-      name: "John Doe",
-      email: loginData.email,
-    };
-    setUser(mockUser);
-    setIsOpen(false);
-    setLoginData({ email: "", password: "" });
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        clearError();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
-    // Redirect to profile page after successful login
-    router.push("/profile");
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccess]);
+
+  const validateLoginForm = (): boolean => {
+    const errors: string[] = [];
+
+    if (!loginData.email.trim()) {
+      errors.push("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginData.email)) {
+      errors.push("Please enter a valid email address");
+    }
+
+    if (!loginData.password.trim()) {
+      errors.push("Password is required");
+    }
+
+    setValidationErrors(errors);
+    return errors.length === 0;
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (registerData.password !== registerData.confirmPassword) {
-      alert("Passwords do not match");
+    clearError();
+    setValidationErrors([]);
+
+    if (!validateLoginForm()) {
       return;
     }
-    // Mock registration - in real app, this would call an API
-    const mockUser = {
-      id: "1",
-      name: registerData.name,
-      email: registerData.email,
-    };
-    setUser(mockUser);
-    setIsOpen(false);
-    setRegisterData({ name: "", email: "", password: "", confirmPassword: "" });
 
-    // Redirect to profile page after successful registration
-    router.push("/profile");
+    const result = await login(loginData);
+
+    if (result.success) {
+      setIsOpen(false);
+      setLoginData({ email: "", password: "" });
+      setShowSuccess(true);
+      router.push("/profile");
+    }
   };
 
-  const handleLogout = () => {
-    setUser(null);
+  const validateRegisterForm = (): boolean => {
+    const errors: string[] = [];
+
+    if (!registerData.name.trim()) {
+      errors.push("Name is required");
+    } else if (registerData.name.trim().length < 2) {
+      errors.push("Name must be at least 2 characters");
+    }
+
+    if (!registerData.email.trim()) {
+      errors.push("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerData.email)) {
+      errors.push("Please enter a valid email address");
+    }
+
+    if (!registerData.password.trim()) {
+      errors.push("Password is required");
+    } else if (registerData.password.length < 6) {
+      errors.push("Password must be at least 6 characters");
+    }
+
+    if (registerData.password !== registerData.confirmPassword) {
+      errors.push("Passwords do not match");
+    }
+
+    setValidationErrors(errors);
+    return errors.length === 0;
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    setValidationErrors([]);
+
+    if (!validateRegisterForm()) {
+      return;
+    }
+
+    const result = await register({
+      name: registerData.name,
+      email: registerData.email,
+      password: registerData.password,
+    });
+
+    if (result.success) {
+      setIsOpen(false);
+      setRegisterData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setShowSuccess(true);
+      router.push("/profile");
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
     router.push("/");
   };
 
@@ -110,10 +199,41 @@ export function AuthDialog() {
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
         </DialogHeader>
+        {/* Error Alert */}
+        {(error || validationErrors.length > 0) && (
+          <Alert className="border-red-500 bg-red-50">
+            <AlertCircle className="w-4 h-4 text-red-600" />
+            <AlertDescription>
+              {error && <div className="text-red-600">{error}</div>}
+              {validationErrors.length > 0 && (
+                <ul className="list-disc list-inside text-red-600 text-sm mt-1">
+                  {validationErrors.map((err, index) => (
+                    <li key={index}>{err}</li>
+                  ))}
+                </ul>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Success Alert */}
+        {showSuccess && (
+          <Alert className="border-green-500 bg-green-50">
+            <CheckCircle className="w-4 h-4 text-green-600" />
+            <AlertDescription className="text-green-600">
+              Welcome! You have been successfully logged in.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="register">Register</TabsTrigger>
+            <TabsTrigger value="login" disabled={isLoading}>
+              Login
+            </TabsTrigger>
+            <TabsTrigger value="register" disabled={isLoading}>
+              Register
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="login" className="space-y-4">
             <form onSubmit={handleLogin} className="space-y-4">
@@ -144,8 +264,16 @@ export function AuthDialog() {
               <Button
                 type="submit"
                 className="w-full bg-orange-500 hover:bg-orange-600"
+                disabled={isLoading}
               >
-                Login
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Login"
+                )}
               </Button>
             </form>
           </TabsContent>
@@ -208,8 +336,16 @@ export function AuthDialog() {
               <Button
                 type="submit"
                 className="w-full bg-orange-500 hover:bg-orange-600"
+                disabled={isLoading}
               >
-                Register
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Register"
+                )}
               </Button>
             </form>
           </TabsContent>
