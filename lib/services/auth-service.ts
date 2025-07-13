@@ -30,109 +30,91 @@ export interface RegisterRequest {
 class AuthService {
   private baseUrl = "/api/auth";
 
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
+  private async makeRequest(
+    url: string,
+    options: RequestInit,
+  ): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/login`, {
-        method: "POST",
+      const response = await fetch(url, {
+        ...options,
         headers: {
           "Content-Type": "application/json",
+          ...options.headers,
         },
         credentials: "include",
-        body: JSON.stringify(credentials),
       });
 
-      const data = await response.json();
+      // Check if response has content before trying to parse JSON
+      const contentType = response.headers.get("content-type");
+      let data: any = {};
 
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+      if (contentType && contentType.includes("application/json")) {
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          console.warn("Failed to parse JSON response:", jsonError);
+          data = { error: "Invalid response format" };
+        }
+      } else {
+        // If not JSON, try to read as text
+        try {
+          const text = await response.text();
+          data = { message: text || "No response data" };
+        } catch (textError) {
+          console.warn("Failed to read response:", textError);
+          data = { error: "Failed to read response" };
+        }
       }
 
-      return data;
+      if (!response.ok) {
+        const errorMessage =
+          data.error ||
+          data.message ||
+          `HTTP ${response.status}: ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+
+      return {
+        success: true,
+        message: data.message || "Operation successful",
+        user: data.user,
+        profile: data.profile,
+        ...data,
+      };
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Request error:", error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : "Login failed",
+        message: error instanceof Error ? error.message : "Request failed",
         error: error instanceof Error ? error.message : "Unknown error",
       };
     }
+  }
+
+  async login(credentials: LoginRequest): Promise<AuthResponse> {
+    return this.makeRequest(`${this.baseUrl}/login`, {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Registration error:", error);
-      return {
-        success: false,
-        message: error instanceof Error ? error.message : "Registration failed",
-        error: error instanceof Error ? error.message : "Unknown error",
-      };
-    }
+    return this.makeRequest(`${this.baseUrl}/register`, {
+      method: "POST",
+      body: JSON.stringify(userData),
+    });
   }
 
   async logout(): Promise<AuthResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Logout failed");
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Logout error:", error);
-      return {
-        success: false,
-        message: error instanceof Error ? error.message : "Logout failed",
-        error: error instanceof Error ? error.message : "Unknown error",
-      };
-    }
+    return this.makeRequest(`${this.baseUrl}/logout`, {
+      method: "POST",
+    });
   }
 
   async getCurrentUser(): Promise<AuthResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/me`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to get user data");
-      }
-
-      return data;
-    } catch (error) {
-      console.error("Get current user error:", error);
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Failed to get user data",
-        error: error instanceof Error ? error.message : "Unknown error",
-      };
-    }
+    return this.makeRequest(`${this.baseUrl}/me`, {
+      method: "GET",
+    });
   }
 
   async checkAuth(): Promise<boolean> {
