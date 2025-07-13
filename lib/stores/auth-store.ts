@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import {
-  debugAuthService as authService,
+  authService,
   type AuthUser,
   type LoginRequest,
   type RegisterRequest,
-} from "@/lib/services/debug-auth-service";
+} from "@/lib/services/auth-service";
 
 interface AuthState {
   user: AuthUser | null;
