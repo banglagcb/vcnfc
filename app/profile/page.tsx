@@ -690,7 +690,7 @@ export default function ProfilePage() {
                           id="customUrl"
                           value={profile.customUrl}
                           onChange={(e) =>
-                            updateField("customUrl", e.target.value)
+                            updateFieldWithSync("customUrl", e.target.value)
                           }
                           disabled={!isEditing}
                           className="rounded-l-none"
