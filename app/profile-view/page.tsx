@@ -127,11 +127,21 @@ export default function ProfileViewPage() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   Profile Information
                 </h1>
-                {lastUpdated && (
+                {profile && (
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-green-600 font-medium">
-                      Live
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        isRecentlyUpdated
+                          ? "bg-green-500 animate-pulse"
+                          : "bg-gray-400"
+                      }`}
+                    ></div>
+                    <span
+                      className={`text-xs font-medium ${
+                        isRecentlyUpdated ? "text-green-600" : "text-gray-500"
+                      }`}
+                    >
+                      {isRecentlyUpdated ? "Live" : "Synced"}
                     </span>
                   </div>
                 )}
