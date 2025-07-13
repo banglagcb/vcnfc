@@ -57,8 +57,22 @@ export default function ProfileViewPage() {
   }, [profile, initializeProfile]);
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // You could add a toast notification here
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        // Simple feedback - you could replace this with a toast notification
+        console.log("Copied to clipboard:", text);
+      })
+      .catch((err) => {
+        console.error("Failed to copy:", err);
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      });
   };
 
   const getSkillProgress = (level: string) => {
