@@ -113,6 +113,9 @@ export default function ProfilePage() {
   const { setProfile: setStoreProfile, updateProfile: updateStoreProfile } =
     useProfileStore();
 
+  // Real-time sync across all pages
+  const { syncUpdate, syncMultipleUpdates } = useRealTimeSync();
+
   const { socialLinks, addSocialLink, updateSocialLink, deleteSocialLink } =
     useProfileSocialLinks(profile?.id);
   const {
