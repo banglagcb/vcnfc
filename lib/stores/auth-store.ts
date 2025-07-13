@@ -1,189 +1,180 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import {
+  authService,
+  type AuthUser,
+  type LoginRequest,
+  type RegisterRequest,
+} from "@/lib/services/auth-service";
 
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  verified: boolean;
-}
-
-interface Profile {
-  id: string;
-  customUrl?: string;
-  firstName?: string;
-  lastName?: string;
-  name?: string;
-  title?: string;
-  company?: string;
-  profileImageUrl?: string;
-  isVerified: boolean;
-  isPremium: boolean;
-}
-
-interface AuthStore {
-  user: User | null;
-  profile: Profile | null;
-  isAuthenticated: boolean;
+interface AuthState {
+  user: AuthUser | null;
   isLoading: boolean;
+  error: string | null;
+  isInitialized: boolean;
+}
 
-  // Actions
-  setUser: (user: User | null) => void;
-  setProfile: (profile: Profile | null) => void;
-  setLoading: (loading: boolean) => void;
+interface AuthActions {
   login: (
-    email: string,
-    password: string,
+    credentials: LoginRequest,
   ) => Promise<{ success: boolean; error?: string }>;
   register: (
-    name: string,
-    email: string,
-    password: string,
+    userData: RegisterRequest,
   ) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
-  clearAuth: () => void;
+  getCurrentUser: () => Promise<void>;
+  clearError: () => void;
+  initializeAuth: () => Promise<void>;
+  isAuthenticated: () => boolean;
 }
+
+type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
+      // State
       user: null,
-      profile: null,
-      isAuthenticated: false,
       isLoading: false,
+      error: null,
+      isInitialized: false,
 
-      setUser: (user) => {
-        set({ user, isAuthenticated: !!user });
-      },
+      // Actions
+      login: async (credentials: LoginRequest) => {
+        set({ isLoading: true, error: null });
 
-      setProfile: (profile) => {
-        set({ profile });
-      },
-
-      setLoading: (loading) => {
-        set({ isLoading: loading });
-      },
-
-      login: async (email: string, password: string) => {
-        set({ isLoading: true });
         try {
-          const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-          });
+          const response = await authService.login(credentials);
 
-          const data = await response.json();
-
-          if (data.success) {
+          if (response.success && response.user) {
             set({
-              user: data.user,
-              profile: data.profile,
-              isAuthenticated: true,
+              user: response.user,
               isLoading: false,
+              error: null,
             });
             return { success: true };
           } else {
-            set({ isLoading: false });
-            return { success: false, error: data.error };
+            set({
+              isLoading: false,
+              error: response.error || response.message || "Login failed",
+            });
+            return {
+              success: false,
+              error: response.error || response.message || "Login failed",
+            };
           }
         } catch (error) {
-          set({ isLoading: false });
-          return { success: false, error: "Network error" };
+          const errorMessage =
+            error instanceof Error ? error.message : "Login failed";
+          set({ isLoading: false, error: errorMessage });
+          return { success: false, error: errorMessage };
         }
       },
 
-      register: async (name: string, email: string, password: string) => {
-        set({ isLoading: true });
+      register: async (userData: RegisterRequest) => {
+        set({ isLoading: true, error: null });
+
         try {
-          const response = await fetch("/api/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
-          });
+          const response = await authService.register(userData);
 
-          const data = await response.json();
-
-          if (data.success) {
+          if (response.success && response.user) {
             set({
-              user: data.user,
-              profile: data.profile,
-              isAuthenticated: true,
+              user: response.user,
               isLoading: false,
+              error: null,
             });
             return { success: true };
           } else {
-            set({ isLoading: false });
-            return { success: false, error: data.error };
+            set({
+              isLoading: false,
+              error:
+                response.error || response.message || "Registration failed",
+            });
+            return {
+              success: false,
+              error:
+                response.error || response.message || "Registration failed",
+            };
           }
         } catch (error) {
-          set({ isLoading: false });
-          return { success: false, error: "Network error" };
+          const errorMessage =
+            error instanceof Error ? error.message : "Registration failed";
+          set({ isLoading: false, error: errorMessage });
+          return { success: false, error: errorMessage };
         }
       },
 
       logout: async () => {
+        set({ isLoading: true });
+
         try {
-          await fetch("/api/auth/logout", { method: "POST" });
-        } catch (error) {
-          console.error("Logout error:", error);
-        } finally {
+          await authService.logout();
           set({
             user: null,
-            profile: null,
-            isAuthenticated: false,
             isLoading: false,
+            error: null,
+          });
+        } catch (error) {
+          // Even if logout fails on server, clear local state
+          set({
+            user: null,
+            isLoading: false,
+            error: null,
           });
         }
       },
 
-      checkAuth: async () => {
+      getCurrentUser: async () => {
         set({ isLoading: true });
-        try {
-          const response = await fetch("/api/auth/me");
-          const data = await response.json();
 
-          if (data.success) {
+        try {
+          const response = await authService.getCurrentUser();
+
+          if (response.success && response.user) {
             set({
-              user: data.user,
-              profile: data.user.profile,
-              isAuthenticated: true,
+              user: response.user,
               isLoading: false,
+              error: null,
+              isInitialized: true,
             });
           } else {
             set({
               user: null,
-              profile: null,
-              isAuthenticated: false,
               isLoading: false,
+              error: null,
+              isInitialized: true,
             });
           }
         } catch (error) {
           set({
             user: null,
-            profile: null,
-            isAuthenticated: false,
             isLoading: false,
+            error: null,
+            isInitialized: true,
           });
         }
       },
 
-      clearAuth: () => {
-        set({
-          user: null,
-          profile: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
+      initializeAuth: async () => {
+        if (get().isInitialized) return;
+
+        await get().getCurrentUser();
+      },
+
+      isAuthenticated: () => {
+        return !!get().user;
+      },
+
+      clearError: () => {
+        set({ error: null });
       },
     }),
     {
       name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,
-        profile: state.profile,
-        isAuthenticated: state.isAuthenticated,
+        isInitialized: state.isInitialized,
       }),
     },
   ),
