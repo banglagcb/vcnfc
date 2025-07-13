@@ -937,7 +937,9 @@ export default function ProfilePage() {
                   <Textarea
                     id="address"
                     value={profile.address || ""}
-                    onChange={(e) => updateField("address", e.target.value)}
+                    onChange={(e) =>
+                      updateFieldWithSync("address", e.target.value)
+                    }
                     disabled={!isEditing}
                     rows={3}
                     className="mt-1 resize-none"
