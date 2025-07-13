@@ -9,7 +9,7 @@ import { Heart, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Product, useStore } from "@/lib/store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -21,7 +21,14 @@ export function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
-  const inWishlist = isInWishlist(product.id);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only checking wishlist state after mount
+  const inWishlist = mounted ? isInWishlist(product.id) : false;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleAddToCart = async () => {
     setIsAddingToCart(true);
