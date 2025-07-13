@@ -65,21 +65,18 @@ async function main() {
           type: "phone",
           label: "Primary Phone",
           value: "+8801723128440",
-          order: 1,
         },
         {
           profileId: adminProfile.id,
           type: "email",
           label: "Business Email",
           value: "admin@shareinfobd.com",
-          order: 2,
         },
         {
           profileId: adminProfile.id,
           type: "website",
           label: "Company Website",
           value: "https://shareinfobd.com",
-          order: 3,
         },
       ],
     });
@@ -93,19 +90,16 @@ async function main() {
           profileId: adminProfile.id,
           platform: "LinkedIn",
           url: "https://linkedin.com/company/shareinfo-bd",
-          order: 1,
         },
         {
           profileId: adminProfile.id,
           platform: "Facebook",
           url: "https://facebook.com/shareinfobd",
-          order: 2,
         },
         {
           profileId: adminProfile.id,
           platform: "Instagram",
           url: "https://instagram.com/shareinfobd",
-          order: 3,
         },
       ],
     });
@@ -119,25 +113,37 @@ async function main() {
           profileId: adminProfile.id,
           name: "NFC Technology",
           level: "expert",
-          order: 1,
+          category: "Technology",
+          yearsOfExperience: 5,
+          isEndorsed: true,
+          endorsements: 12,
         },
         {
           profileId: adminProfile.id,
           name: "Digital Marketing",
           level: "advanced",
-          order: 2,
+          category: "Marketing",
+          yearsOfExperience: 3,
+          isEndorsed: true,
+          endorsements: 8,
         },
         {
           profileId: adminProfile.id,
           name: "Business Development",
           level: "expert",
-          order: 3,
+          category: "Business",
+          yearsOfExperience: 7,
+          isEndorsed: true,
+          endorsements: 15,
         },
         {
           profileId: adminProfile.id,
           name: "Product Design",
           level: "advanced",
-          order: 4,
+          category: "Design",
+          yearsOfExperience: 4,
+          isEndorsed: false,
+          endorsements: 5,
         },
       ],
     });
@@ -184,7 +190,6 @@ async function main() {
           content:
             "ShareInfo NFC cards have revolutionized my networking. Highly recommend!",
           rating: 5,
-          order: 1,
         },
         {
           profileId: adminProfile.id,
@@ -193,7 +198,6 @@ async function main() {
           content:
             "Professional, innovative, and incredibly easy to use. Great investment!",
           rating: 5,
-          order: 2,
         },
         {
           profileId: adminProfile.id,
@@ -202,7 +206,6 @@ async function main() {
           content:
             "The future of business cards. ShareInfo delivers excellence.",
           rating: 5,
-          order: 3,
         },
       ],
     });
