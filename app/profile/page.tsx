@@ -158,6 +158,8 @@ export default function ProfilePage() {
     updateField(field, value);
     if (profile) {
       updateStoreProfile({ [field]: value });
+      // Sync across all pages instantly
+      syncUpdate(field, value);
     }
   };
 
