@@ -28,6 +28,7 @@ import {
   AnalyticsCardSkeleton,
 } from "@/components/ui/skeleton";
 import { useStore } from "@/lib/store";
+import { useAuthStore } from "@/lib/stores/auth-store";
 import {
   Edit,
   Save,
@@ -86,7 +87,7 @@ import { useRealTimeSync } from "@/hooks/use-real-time-sync";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
-  const { user, isAuthenticated } = useStore();
+  const { user, isAuthenticated, initializeAuth } = useAuthStore();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
@@ -141,10 +142,13 @@ export default function ProfilePage() {
 
   // Authentication check
   useEffect(() => {
-    if (mounted && !isAuthenticated()) {
-      router.push("/");
+    if (mounted) {
+      initializeAuth();
+      if (!isAuthenticated()) {
+        router.push("/");
+      }
     }
-  }, [mounted, isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router, initializeAuth]);
 
   // Sync profile changes to store for real-time preview updates
   useEffect(() => {
