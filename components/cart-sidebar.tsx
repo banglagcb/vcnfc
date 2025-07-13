@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
+import { LoadingButton } from "@/components/ui/loading-states";
+import { useToast } from "@/components/ui/toast";
 import { useStore } from "@/lib/store";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +26,9 @@ export function CartSidebar() {
     getCartItemsCount,
     clearCart,
   } = useStore();
+  const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -96,9 +100,12 @@ export function CartSidebar() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
+                        disabled={isUpdating === item.id}
+                        onClick={async () => {
+                          setIsUpdating(item.id);
+                          updateQuantity(item.id, item.quantity - 1);
+                          setTimeout(() => setIsUpdating(null), 300);
+                        }}
                       >
                         <Minus className="w-3 h-3" />
                       </Button>
@@ -106,9 +113,12 @@ export function CartSidebar() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
+                        disabled={isUpdating === item.id}
+                        onClick={async () => {
+                          setIsUpdating(item.id);
+                          updateQuantity(item.id, item.quantity + 1);
+                          setTimeout(() => setIsUpdating(null), 300);
+                        }}
                       >
                         <Plus className="w-3 h-3" />
                       </Button>
@@ -116,7 +126,11 @@ export function CartSidebar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => removeFromCart(item.id)}
+                      disabled={isUpdating === item.id}
+                      onClick={() => {
+                        removeFromCart(item.id);
+                        toast.success(`${item.name} removed from cart`);
+                      }}
                       className="text-red-500 hover:text-red-700"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -132,7 +146,10 @@ export function CartSidebar() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={clearCart}
+                    onClick={() => {
+                      clearCart();
+                      toast.info("Cart cleared successfully");
+                    }}
                     className="text-red-500 hover:text-red-700 bg-transparent"
                   >
                     Clear Cart
