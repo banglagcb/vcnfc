@@ -213,7 +213,7 @@ async function main() {
     console.log("✅ Sample testimonials created");
 
     // Initialize analytics for profiles
-    await prisma.profileAnalytics.createMany({
+    await prisma.profileAnalytic.createMany({
       data: [
         {
           profileId: adminProfile.id,
