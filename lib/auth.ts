@@ -5,6 +5,16 @@ import { db } from "./db";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key";
 
+export const generateRandomString = (length: number): string => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
+
 export interface AuthUser {
   id: string;
   email: string;
