@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useToast } from "@/components/ui/toast";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -31,6 +32,7 @@ export function AuthDialog() {
     clearError,
     initializeAuth,
   } = useAuthStore();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [registerData, setRegisterData] = useState({
@@ -41,7 +43,6 @@ export function AuthDialog() {
   });
   const [mounted, setMounted] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -57,15 +58,6 @@ export function AuthDialog() {
       return () => clearTimeout(timer);
     }
   }, [error, clearError]);
-
-  useEffect(() => {
-    if (showSuccess) {
-      const timer = setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccess]);
 
   const validateLoginForm = (): boolean => {
     const errors: string[] = [];
@@ -98,7 +90,7 @@ export function AuthDialog() {
     if (result.success) {
       setIsOpen(false);
       setLoginData({ email: "", password: "" });
-      setShowSuccess(true);
+      toast.success("Welcome back! You have been successfully logged in.");
       router.push("/profile");
     }
   };
@@ -155,13 +147,14 @@ export function AuthDialog() {
         password: "",
         confirmPassword: "",
       });
-      setShowSuccess(true);
+      toast.success("Account created successfully! Welcome to ShareInfo.");
       router.push("/profile");
     }
   };
 
   const handleLogout = async () => {
     await logout();
+    toast.info("You have been logged out successfully.");
     router.push("/");
   };
 
@@ -212,16 +205,6 @@ export function AuthDialog() {
                   ))}
                 </ul>
               )}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Success Alert */}
-        {showSuccess && (
-          <Alert className="border-green-500 bg-green-50">
-            <CheckCircle className="w-4 h-4 text-green-600" />
-            <AlertDescription className="text-green-600">
-              Welcome! You have been successfully logged in.
             </AlertDescription>
           </Alert>
         )}
