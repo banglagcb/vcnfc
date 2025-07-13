@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useProfileStore } from "@/lib/stores/profile-store";
+import { useRealTimeProfileView } from "@/hooks/use-real-time-sync";
 import { downloadVCard, shareProfile } from "@/lib/utils/vcard";
 import {
   User,
