@@ -157,6 +157,14 @@ export default function ProfilePage() {
     }
   };
 
+  // Enhanced contact fields update that also syncs to store
+  const updateContactFieldsWithSync = (updatedFields: any[]) => {
+    updateField("contactFields", updatedFields);
+    if (profile) {
+      updateStoreProfile({ contactFields: updatedFields });
+    }
+  };
+
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
