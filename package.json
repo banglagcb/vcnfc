@@ -37,7 +37,8 @@
     "logs": "tail -f app.log",
     "backup": "tsx scripts/backup.ts",
     "production-check": "tsx scripts/production-check.ts",
-    "setup-env": "tsx scripts/setup-env.ts"
+    "setup-env": "tsx scripts/setup-env.ts",
+    "dev-check": "tsx scripts/dev-health-check.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
