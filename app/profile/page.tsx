@@ -473,10 +473,19 @@ export default function ProfilePage() {
                 variant="outline"
                 size="sm"
                 className="sm:h-10 sm:px-4 sm:py-2"
+                onClick={() => window.open("/profile-view", "_blank")}
+              >
+                <User className="w-4 h-4 mr-2" />
+                View Profile
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="sm:h-10 sm:px-4 sm:py-2"
                 onClick={() => window.open("/preview", "_blank")}
               >
                 <Eye className="w-4 h-4 mr-2" />
-                Preview
+                Business Card
               </Button>
               <Button
                 onClick={() =>
