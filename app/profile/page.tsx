@@ -982,7 +982,7 @@ export default function ProfilePage() {
                                       ? { ...f, label: e.target.value }
                                       : f,
                                   ) || [];
-                                updateField("contactFields", updatedFields);
+                                updateContactFieldsWithSync(updatedFields);
                               }
                             }}
                             disabled={!isEditing}
