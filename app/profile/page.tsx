@@ -52,6 +52,7 @@ import {
   Calendar,
   TrendingUp,
   Users,
+  User,
   Target,
   ExternalLink,
   Github,
