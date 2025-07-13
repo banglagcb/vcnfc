@@ -148,9 +148,9 @@ export default function ProfileViewPage() {
               </div>
               <p className="text-sm text-gray-600">
                 Complete profile overview and details
-                {lastUpdated && (
+                {lastUpdateTime && (
                   <span className="ml-2 text-xs text-gray-400">
-                    • Updated {lastUpdated}
+                    • Updated {lastUpdateTime}
                   </span>
                 )}
               </p>
