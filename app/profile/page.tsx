@@ -229,9 +229,9 @@ export default function ProfilePage() {
       const uploadedImage = await uploadImage(file, type);
       if (uploadedImage) {
         if (type === "profile") {
-          updateField("profileImage", uploadedImage);
+          updateFieldWithSync("profileImage", uploadedImage);
         } else {
-          updateField("coverImage", uploadedImage);
+          updateFieldWithSync("coverImage", uploadedImage);
         }
       }
     }
