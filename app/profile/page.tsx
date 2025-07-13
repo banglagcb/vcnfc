@@ -999,7 +999,7 @@ export default function ProfilePage() {
                                       ? { ...f, value: e.target.value }
                                       : f,
                                   ) || [];
-                                updateField("contactFields", updatedFields);
+                                updateContactFieldsWithSync(updatedFields);
                               }
                             }}
                             disabled={!isEditing}
