@@ -168,6 +168,8 @@ export default function ProfilePage() {
     updateField("contactFields", updatedFields);
     if (profile) {
       updateStoreProfile({ contactFields: updatedFields });
+      // Sync across all pages instantly
+      syncUpdate("contactFields", updatedFields);
     }
   };
 
