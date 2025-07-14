@@ -1,0 +1,261 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile   Profile?
+  accounts  Account[]
+  sessions  Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+    refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  firstName   String?
+  lastName    String?
+  name        String?
+  title       String?
+  company     String?
+  department  String?
+  bio         String?
+  location    String?
+  timezone    String?
+  email       String?
+  phone       String?
+  website     String?
+  address     String?
+  customUrl   String?  @unique
+  
+  // Media
+  profileImageUrl String?
+  profileImageId  String?
+  coverImageUrl   String?
+  coverImageId    String?
+  
+  // Settings
+  isPublic        Boolean @default(true)
+  showAnalytics   Boolean @default(false)
+  allowContact    Boolean @default(true)
+  allowDownload   Boolean @default(true)
+  theme           String  @default("modern")
+  
+  // Status
+  isVerified Boolean @default(false)
+  isPremium  Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contactFields     ContactField[]
+  socialLinks       SocialLink[]
+  skills            Skill[]
+  workExperience    WorkExperience[]
+  achievements      Achievement[]
+  portfolioItems    PortfolioItem[]
+  testimonials      Testimonial[]
+  analytics         ProfileAnalytic[]
+
+  @@map("profiles")
+}
+
+model ContactField {
+  id        String   @id @default(cuid())
+  profileId String
+  label     String
+  value     String
+  type      String   // email, phone, website, text
+  icon      String?
+  isPublic  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("contact_fields")
+}
+
+model SocialLink {
+  id          String   @id @default(cuid())
+  profileId   String
+  platform    String
+  url         String
+  icon        String?
+  displayName String?
+  isPublic    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("social_links")
+}
+
+model Skill {
+  id                String   @id @default(cuid())
+  profileId         String
+  name              String
+  level             String   // beginner, intermediate, advanced, expert
+  category          String?
+  yearsOfExperience Int?
+  isEndorsed        Boolean  @default(false)
+  endorsements      Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("skills")
+}
+
+model WorkExperience {
+  id           String   @id @default(cuid())
+  profileId    String
+  company      String
+  position     String
+  startDate    String
+  endDate      String?
+  isCurrent    Boolean  @default(false)
+  description  String?
+    skills       String? // JSON array of skill names
+  achievements String? // JSON array of achievements
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("work_experience")
+}
+
+model Achievement {
+  id           String   @id @default(cuid())
+  profileId    String
+  title        String
+  description  String?
+  issuer       String?
+  dateEarned   String?
+  credentialId String?
+  credentialUrl String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("achievements")
+}
+
+model PortfolioItem {
+  id            String   @id @default(cuid())
+  profileId     String
+  title         String
+  description   String?
+  imageUrl      String?
+  imageId       String?
+  projectUrl    String?
+  repositoryUrl String?
+    technologies  String? // JSON array of technology names
+  category      String?
+  featured      Boolean  @default(false)
+  completedDate String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("portfolio_items")
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  profileId    String
+  clientName   String
+  clientTitle  String?
+  clientCompany String?
+  clientAvatar String?
+  content      String
+  rating       Int      @default(5)
+  dateReceived String?
+  isPublic     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("testimonials")
+}
+
+model ProfileAnalytic {
+  id        String   @id @default(cuid())
+  profileId String
+  event     String   // view, download, share, contact
+    metadata  String?    // JSON string for additional data
+  userAgent String?
+  ipAddress String?
+  country   String?
+  createdAt DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("profile_analytics")
+}
