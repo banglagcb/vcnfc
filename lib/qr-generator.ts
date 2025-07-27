@@ -1,8 +1,13 @@
 export interface QRCodeOptions {
+  text: string
   size?: number
-  color?: string
   backgroundColor?: string
+  foregroundColor?: string
+  logo?: string
+  logoSize?: number
+  errorCorrectionLevel?: "L" | "M" | "Q" | "H"
   margin?: number
+  style?: "square" | "rounded" | "dots"
 }
 
 export interface ProfileData {
@@ -12,128 +17,236 @@ export interface ProfileData {
   phone?: string
   email?: string
   website?: string
-  bio?: string
   address?: string
+  bio?: string
   socialLinks?: {
     [key: string]: string
   }
 }
 
-// QR Code generation using canvas
-export function generateQRCode(text: string, options: QRCodeOptions = {}): string {
-  const { size = 256, color = "#000000", backgroundColor = "#ffffff", margin = 4 } = options
+export class QRCodeGenerator {
+  private canvas: HTMLCanvasElement
+  private ctx: CanvasRenderingContext2D
 
-  const canvas = document.createElement("canvas")
-  const ctx = canvas.getContext("2d")
+  constructor() {
+    this.canvas = document.createElement("canvas")
+    this.ctx = this.canvas.getContext("2d")!
+  }
 
-  if (!ctx) return ""
+  async generateQRCode(options: QRCodeOptions): Promise<string> {
+    const {
+      text,
+      size = 256,
+      backgroundColor = "#ffffff",
+      foregroundColor = "#000000",
+      logo,
+      logoSize = 40,
+      errorCorrectionLevel = "M",
+      margin = 4,
+      style = "square",
+    } = options
 
-  canvas.width = size
-  canvas.height = size
+    // Set canvas size
+    this.canvas.width = size
+    this.canvas.height = size
 
-  // Fill background
-  ctx.fillStyle = backgroundColor
-  ctx.fillRect(0, 0, size, size)
+    // Clear canvas
+    this.ctx.fillStyle = backgroundColor
+    this.ctx.fillRect(0, 0, size, size)
 
-  // Simple QR-like pattern generation
-  const moduleSize = Math.floor((size - margin * 2) / 25)
-  const startX = margin
-  const startY = margin
+    try {
+      // Generate QR code matrix using a simple algorithm
+      const qrMatrix = this.generateQRMatrix(text, errorCorrectionLevel)
+      const moduleSize = (size - margin * 2) / qrMatrix.length
 
-  ctx.fillStyle = color
+      // Draw QR code
+      this.ctx.fillStyle = foregroundColor
 
-  // Generate a simple pattern based on text hash
-  const hash = simpleHash(text)
+      for (let row = 0; row < qrMatrix.length; row++) {
+        for (let col = 0; col < qrMatrix[row].length; col++) {
+          if (qrMatrix[row][col]) {
+            const x = margin + col * moduleSize
+            const y = margin + row * moduleSize
 
-  for (let row = 0; row < 25; row++) {
-    for (let col = 0; col < 25; col++) {
-      const shouldFill = shouldFillModule(row, col, hash)
-      if (shouldFill) {
-        ctx.fillRect(startX + col * moduleSize, startY + row * moduleSize, moduleSize, moduleSize)
+            switch (style) {
+              case "rounded":
+                this.drawRoundedRect(x, y, moduleSize, moduleSize, moduleSize * 0.2)
+                break
+              case "dots":
+                this.drawCircle(x + moduleSize / 2, y + moduleSize / 2, moduleSize * 0.4)
+                break
+              default:
+                this.ctx.fillRect(x, y, moduleSize, moduleSize)
+            }
+          }
+        }
+      }
+
+      // Add logo if provided
+      if (logo) {
+        await this.addLogo(logo, logoSize, size)
+      }
+
+      return this.canvas.toDataURL("image/png")
+    } catch (error) {
+      console.error("Error generating QR code:", error)
+      throw new Error("Failed to generate QR code")
+    }
+  }
+
+  private generateQRMatrix(text: string, errorLevel: string): boolean[][] {
+    // This is a simplified QR code generation
+    // In a real implementation, you would use a proper QR code library
+    const size = 25 // Standard QR code size for demo
+    const matrix: boolean[][] = []
+
+    // Initialize matrix
+    for (let i = 0; i < size; i++) {
+      matrix[i] = new Array(size).fill(false)
+    }
+
+    // Add finder patterns (corners)
+    this.addFinderPattern(matrix, 0, 0)
+    this.addFinderPattern(matrix, size - 7, 0)
+    this.addFinderPattern(matrix, 0, size - 7)
+
+    // Add timing patterns
+    for (let i = 8; i < size - 8; i++) {
+      matrix[6][i] = i % 2 === 0
+      matrix[i][6] = i % 2 === 0
+    }
+
+    // Add data (simplified - just create a pattern based on text)
+    const textHash = this.simpleHash(text)
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        if (!this.isReservedArea(row, col, size)) {
+          matrix[row][col] = (textHash + row + col) % 3 === 0
+        }
+      }
+    }
+
+    return matrix
+  }
+
+  private addFinderPattern(matrix: boolean[][], startRow: number, startCol: number) {
+    const pattern = [
+      [true, true, true, true, true, true, true],
+      [true, false, false, false, false, false, true],
+      [true, false, true, true, true, false, true],
+      [true, false, true, true, true, false, true],
+      [true, false, true, true, true, false, true],
+      [true, false, false, false, false, false, true],
+      [true, true, true, true, true, true, true],
+    ]
+
+    for (let row = 0; row < 7; row++) {
+      for (let col = 0; col < 7; col++) {
+        if (startRow + row < matrix.length && startCol + col < matrix[0].length) {
+          matrix[startRow + row][startCol + col] = pattern[row][col]
+        }
       }
     }
   }
 
-  // Add finder patterns (corner squares)
-  drawFinderPattern(ctx, startX, startY, moduleSize)
-  drawFinderPattern(ctx, startX + 18 * moduleSize, startY, moduleSize)
-  drawFinderPattern(ctx, startX, startY + 18 * moduleSize, moduleSize)
+  private isReservedArea(row: number, col: number, size: number): boolean {
+    // Check if position is in finder patterns
+    if ((row < 9 && col < 9) || (row < 9 && col >= size - 8) || (row >= size - 8 && col < 9)) {
+      return true
+    }
 
-  return canvas.toDataURL("image/png")
-}
+    // Check if position is in timing patterns
+    if (row === 6 || col === 6) {
+      return true
+    }
 
-function simpleHash(str: string): number {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = (hash << 5) - hash + char
-    hash = hash & hash // Convert to 32-bit integer
-  }
-  return Math.abs(hash)
-}
-
-function shouldFillModule(row: number, col: number, hash: number): boolean {
-  // Skip finder pattern areas
-  if ((row < 7 && col < 7) || (row < 7 && col > 17) || (row > 17 && col < 7)) {
     return false
   }
 
-  // Create pattern based on hash
-  const seed = hash + row * 25 + col
-  return seed % 3 === 0
-}
-
-function drawFinderPattern(ctx: CanvasRenderingContext2D, x: number, y: number, moduleSize: number) {
-  // Outer square (7x7)
-  ctx.fillRect(x, y, moduleSize * 7, moduleSize * 7)
-
-  // Inner white square (5x5)
-  ctx.fillStyle = "#ffffff"
-  ctx.fillRect(x + moduleSize, y + moduleSize, moduleSize * 5, moduleSize * 5)
-
-  // Center black square (3x3)
-  ctx.fillStyle = "#000000"
-  ctx.fillRect(x + moduleSize * 2, y + moduleSize * 2, moduleSize * 3, moduleSize * 3)
-}
-
-// Generate vCard format
-export function generateVCard(profile: ProfileData): string {
-  let vcard = "BEGIN:VCARD\nVERSION:3.0\n"
-
-  if (profile.name) {
-    vcard += `FN:${profile.name}\n`
-    vcard += `N:${profile.name};;;;\n`
+  private simpleHash(str: string): number {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i)
+      hash = (hash << 5) - hash + char
+      hash = hash & hash // Convert to 32-bit integer
+    }
+    return Math.abs(hash)
   }
 
-  if (profile.title) vcard += `TITLE:${profile.title}\n`
-  if (profile.company) vcard += `ORG:${profile.company}\n`
-  if (profile.phone) vcard += `TEL;TYPE=CELL:${profile.phone}\n`
-  if (profile.email) vcard += `EMAIL;TYPE=INTERNET:${profile.email}\n`
-  if (profile.website) vcard += `URL:${profile.website}\n`
-  if (profile.address) vcard += `ADR;TYPE=WORK:;;${profile.address};;;;\n`
-  if (profile.bio) vcard += `NOTE:${profile.bio}\n`
+  private drawRoundedRect(x: number, y: number, width: number, height: number, radius: number) {
+    this.ctx.beginPath()
+    this.ctx.moveTo(x + radius, y)
+    this.ctx.lineTo(x + width - radius, y)
+    this.ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
+    this.ctx.lineTo(x + width, y + height - radius)
+    this.ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+    this.ctx.lineTo(x + radius, y + height)
+    this.ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
+    this.ctx.lineTo(x, y + radius)
+    this.ctx.quadraticCurveTo(x, y, x + radius, y)
+    this.ctx.closePath()
+    this.ctx.fill()
+  }
 
-  // Add social links
-  if (profile.socialLinks) {
-    Object.entries(profile.socialLinks).forEach(([platform, url]) => {
-      if (url) {
-        vcard += `X-SOCIALPROFILE;TYPE=${platform}:${url}\n`
+  private drawCircle(x: number, y: number, radius: number) {
+    this.ctx.beginPath()
+    this.ctx.arc(x, y, radius, 0, 2 * Math.PI)
+    this.ctx.fill()
+  }
+
+  private async addLogo(logoUrl: string, logoSize: number, canvasSize: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = "anonymous"
+      img.onload = () => {
+        const logoX = (canvasSize - logoSize) / 2
+        const logoY = (canvasSize - logoSize) / 2
+
+        // Draw white background for logo
+        this.ctx.fillStyle = "#ffffff"
+        this.ctx.fillRect(logoX - 4, logoY - 4, logoSize + 8, logoSize + 8)
+
+        // Draw logo
+        this.ctx.drawImage(img, logoX, logoY, logoSize, logoSize)
+        resolve()
       }
+      img.onerror = () => reject(new Error("Failed to load logo"))
+      img.src = logoUrl
     })
   }
 
-  vcard += "END:VCARD"
-  return vcard
+  downloadQRCode(dataUrl: string, filename = "qrcode.png") {
+    const link = document.createElement("a")
+    link.download = filename
+    link.href = dataUrl
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 }
 
-// Download QR code as image
-export function downloadQRCode(dataUrl: string, filename = "qrcode.png") {
-  const link = document.createElement("a")
-  link.download = filename
-  link.href = dataUrl
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+// Export singleton instance
+export const qrGenerator = new QRCodeGenerator()
+
+// Generate vCard format
+export function generateVCard(profile: ProfileData): string {
+  const vcard = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${profile.name}`,
+    profile.title ? `TITLE:${profile.title}` : "",
+    profile.company ? `ORG:${profile.company}` : "",
+    profile.phone ? `TEL:${profile.phone}` : "",
+    profile.email ? `EMAIL:${profile.email}` : "",
+    profile.website ? `URL:${profile.website}` : "",
+    profile.address ? `ADR:;;${profile.address};;;;` : "",
+    profile.bio ? `NOTE:${profile.bio}` : "",
+    "END:VCARD",
+  ]
+    .filter((line) => line !== "")
+    .join("\n")
+
+  return vcard
 }
 
 // Download vCard
@@ -152,12 +265,12 @@ export function downloadVCard(vcard: string, filename = "contact.vcf") {
 // Share profile
 export async function shareProfile(profile: ProfileData, profileUrl: string) {
   const shareData = {
-    title: `${profile.name} - ${profile.title || "Professional Profile"}`,
-    text: profile.bio || `Connect with ${profile.name}`,
+    title: `${profile.name} - ${profile.title || "প্রোফাইল"}`,
+    text: profile.bio || `${profile.name} এর সাথে যোগাযোগ করুন`,
     url: profileUrl,
   }
 
-  if (navigator.share && navigator.canShare(shareData)) {
+  if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
     try {
       await navigator.share(shareData)
     } catch (error) {
@@ -171,17 +284,20 @@ export async function shareProfile(profile: ProfileData, profileUrl: string) {
 
 function fallbackShare(url: string) {
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("প্রোফাইল লিংক কপি হয়েছে!")
-    })
-  } else {
-    // Fallback for older browsers
-    const textArea = document.createElement("textarea")
-    textArea.value = url
-    document.body.appendChild(textArea)
-    textArea.select()
-    document.execCommand("copy")
-    document.body.removeChild(textArea)
-    alert("প্রোফাইল লিংক কপি হয়েছে!")
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        alert("প্রোফাইল লিংক কপি হয়েছে!")
+      })
+      .catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea")
+        textArea.value = url
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand("copy")
+        document.body.removeChild(textArea)
+        alert("প্রোফাইল লিংক কপি হয়েছে!")
+      })
   }
 }

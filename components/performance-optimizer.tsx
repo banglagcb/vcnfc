@@ -6,7 +6,7 @@ export function PerformanceOptimizer() {
   useEffect(() => {
     // Preload critical resources
     const preloadResources = () => {
-      const criticalImages = ["/placeholder.svg?height=500&width=400", "/placeholder.svg?height=300&width=300"]
+      const criticalImages = ["/images/hero-phones.png", "/images/hero-screenshot.png"]
 
       criticalImages.forEach((src) => {
         const link = document.createElement("link")
@@ -17,15 +17,15 @@ export function PerformanceOptimizer() {
       })
     }
 
-    // Lazy load non-critical resources
-    const lazyLoadImages = () => {
-      const images = document.querySelectorAll("img[data-lazy]")
+    // Optimize images with lazy loading
+    const optimizeImages = () => {
+      const images = document.querySelectorAll("img[data-src]")
       const imageObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const img = entry.target as HTMLImageElement
-            img.src = img.dataset.lazy || ""
-            img.removeAttribute("data-lazy")
+            img.src = img.dataset.src || ""
+            img.classList.remove("lazy")
             imageObserver.unobserve(img)
           }
         })
@@ -34,13 +34,14 @@ export function PerformanceOptimizer() {
       images.forEach((img) => imageObserver.observe(img))
     }
 
-    // Service Worker for caching
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(console.error)
-    }
-
+    // Initialize optimizations
     preloadResources()
-    lazyLoadImages()
+    optimizeImages()
+
+    // Cleanup function
+    return () => {
+      // Clean up observers if needed
+    }
   }, [])
 
   return null
