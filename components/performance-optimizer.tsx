@@ -6,7 +6,7 @@ export function PerformanceOptimizer() {
   useEffect(() => {
     // Preload critical resources
     const preloadResources = () => {
-      const criticalImages = ["/images/hero-phones.png", "/images/hero-screenshot.png"]
+      const criticalImages = ["/placeholder.svg?height=500&width=400", "/placeholder.svg?height=300&width=300"]
 
       criticalImages.forEach((src) => {
         const link = document.createElement("link")
@@ -17,15 +17,15 @@ export function PerformanceOptimizer() {
       })
     }
 
-    // Lazy load images
+    // Lazy load non-critical resources
     const lazyLoadImages = () => {
-      const images = document.querySelectorAll("img[data-src]")
+      const images = document.querySelectorAll("img[data-lazy]")
       const imageObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const img = entry.target as HTMLImageElement
-            img.src = img.dataset.src || ""
-            img.removeAttribute("data-src")
+            img.src = img.dataset.lazy || ""
+            img.removeAttribute("data-lazy")
             imageObserver.unobserve(img)
           }
         })
@@ -34,29 +34,13 @@ export function PerformanceOptimizer() {
       images.forEach((img) => imageObserver.observe(img))
     }
 
-    // Optimize fonts
-    const optimizeFonts = () => {
-      const link = document.createElement("link")
-      link.rel = "preconnect"
-      link.href = "https://fonts.googleapis.com"
-      document.head.appendChild(link)
-
-      const link2 = document.createElement("link")
-      link2.rel = "preconnect"
-      link2.href = "https://fonts.gstatic.com"
-      link2.crossOrigin = "anonymous"
-      document.head.appendChild(link2)
+    // Service Worker for caching
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(console.error)
     }
 
-    // Initialize optimizations
     preloadResources()
     lazyLoadImages()
-    optimizeFonts()
-
-    // Cleanup function
-    return () => {
-      // Remove any event listeners or observers if needed
-    }
   }, [])
 
   return null

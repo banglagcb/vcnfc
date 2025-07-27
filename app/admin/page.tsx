@@ -1,8 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { adminAuth } from "@/lib/admin-auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,25 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Package, ShoppingCart, TrendingUp, Eye, Edit, Plus, Search, Filter, Download } from "lucide-react"
 import { useState } from "react"
 
-export default function AdminPage() {
-  const router = useRouter()
-
-  useEffect(() => {
-    if (adminAuth.isAuthenticated()) {
-      router.push("/admin/dashboard")
-    } else {
-      router.push("/admin/login")
-    }
-  }, [router])
-
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-    </div>
-  )
-}
-
-function AdminDashboard() {
+export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("")
 
   // Mock data
