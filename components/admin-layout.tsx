@@ -2,156 +2,169 @@
 
 import type React from "react"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { useAdminAuth } from "@/lib/admin-auth"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
-  SidebarInset,
 } from "@/components/ui/sidebar"
-import {
-  LayoutDashboard,
-  Users,
-  Package,
-  ShoppingCart,
-  BarChart3,
-  Settings,
-  Bell,
-  LogOut,
-  User,
-  Shield,
-  MessageSquare,
-  FileText,
-  CreditCard,
-  Truck,
-} from "lucide-react"
+import { BarChart3, Users, Package, ShoppingCart, Settings, LogOut, Shield, Bell, Search } from "lucide-react"
+import { adminAuth, type User } from "@/lib/admin-auth"
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
-  { icon: Users, label: "Users", href: "/admin/users" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
-  { icon: Package, label: "Products", href: "/admin/products" },
-  { icon: Truck, label: "Inventory", href: "/admin/inventory" },
-  { icon: CreditCard, label: "Payments", href: "/admin/payments" },
-  { icon: MessageSquare, label: "Support", href: "/admin/support" },
-  { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
-  { icon: FileText, label: "Reports", href: "/admin/reports" },
-  { icon: Bell, label: "Notifications", href: "/admin/notifications" },
-  { icon: Settings, label: "Settings", href: "/admin/settings" },
+const navigation = [
+  {
+    title: "Overview",
+    items: [{ name: "Dashboard", href: "/admin/dashboard", icon: BarChart3 }],
+  },
+  {
+    title: "Management",
+    items: [
+      { name: "Users", href: "/admin/users", icon: Users },
+      { name: "Products", href: "/admin/products", icon: Package },
+      { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
+    ],
+  },
+  {
+    title: "System",
+    items: [{ name: "Settings", href: "/admin/settings", icon: Settings }],
+  },
 ]
 
-export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { admin, isAuthenticated, logout } = useAdminAuth()
+interface AdminLayoutProps {
+  children: React.ReactNode
+}
+
+export function AdminLayout({ children }: AdminLayoutProps) {
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
-    if (!isAuthenticated && !pathname.includes("/admin/login")) {
+    if (!adminAuth.isAuthenticated()) {
       router.push("/admin/login")
+      return
     }
-  }, [isAuthenticated, router, pathname])
 
-  if (!isAuthenticated) {
-    return null
-  }
+    const currentUser = adminAuth.getCurrentUser()
+    setUser(currentUser)
+  }, [router])
 
   const handleLogout = () => {
-    logout()
+    adminAuth.logout()
     router.push("/admin/login")
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    )
   }
 
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className="border-b p-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="font-bold text-lg">SHAREINFO</h2>
-              <p className="text-xs text-gray-500">Admin Panel</p>
-            </div>
+        <SidebarHeader>
+          <div className="flex items-center gap-2 px-4 py-2">
+            <Shield className="h-6 w-6 text-blue-600" />
+            <span className="font-semibold text-lg">ShareInfo Admin</span>
           </div>
         </SidebarHeader>
+
         <SidebarContent>
-          <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton asChild isActive={pathname === item.href}>
-                  <a href={item.href} className="flex items-center space-x-3">
-                    <item.icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
+          {navigation.map((section) => (
+            <SidebarGroup key={section.title}>
+              <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {section.items.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton asChild isActive={pathname === item.href}>
+                        <Link href={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
         </SidebarContent>
+
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={user.avatar || "/placeholder.svg"} />
+                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <span>{user.name}</span>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+
+        <SidebarRail />
       </Sidebar>
 
       <SidebarInset>
-        <header className="flex h-16 items-center justify-between border-b px-6">
-          <div className="flex items-center space-x-4">
-            <SidebarTrigger />
-            <h1 className="text-xl font-semibold">
-              {menuItems.find((item) => item.href === pathname)?.label || "Dashboard"}
-            </h1>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Bell className="w-5 h-5" />
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <div className="flex items-center gap-2 ml-auto">
+            <Button variant="ghost" size="icon">
+              <Search className="h-4 w-4" />
             </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2">
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback>{admin?.username.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div className="text-left">
-                    <p className="text-sm font-medium">{admin?.username}</p>
-                    <p className="text-xs text-gray-500">{admin?.role}</p>
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem>
-                  <User className="w-4 h-4 mr-2" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button variant="ghost" size="icon">
+              <Bell className="h-4 w-4" />
+            </Button>
           </div>
         </header>
 
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 overflow-auto">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   )
