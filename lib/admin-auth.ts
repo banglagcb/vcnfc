@@ -1,79 +1,120 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+"use client"
 
-export interface AdminUser {
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+
+interface Admin {
   id: string
   username: string
   email: string
   role: "super_admin" | "admin" | "moderator"
   permissions: string[]
-  lastLogin: string
-  isActive: boolean
+  lastLogin: Date
 }
 
-interface AdminAuthState {
-  admin: AdminUser | null
+interface AdminAuthContextType {
+  admin: Admin | null
   isAuthenticated: boolean
   login: (username: string, password: string) => Promise<boolean>
   logout: () => void
-  checkPermission: (permission: string) => boolean
+  hasPermission: (permission: string) => boolean
 }
 
-// Mock admin users
+const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined)
+
+// Mock admin data - in real app, this would come from your backend
 const mockAdmins = [
   {
     id: "1",
     username: "admin",
+    password: "admin123", // In real app, this would be hashed
     email: "admin@shareinfo.com",
-    password: "admin123",
     role: "super_admin" as const,
-    permissions: ["all"],
-    lastLogin: new Date().toISOString(),
-    isActive: true,
+    permissions: ["*"], // Super admin has all permissions
+    lastLogin: new Date(),
   },
   {
     id: "2",
     username: "moderator",
-    email: "mod@shareinfo.com",
     password: "mod123",
+    email: "mod@shareinfo.com",
     role: "moderator" as const,
-    permissions: ["users.view", "orders.view", "products.view"],
-    lastLogin: new Date().toISOString(),
-    isActive: true,
+    permissions: ["users.read", "orders.read", "products.read", "support.manage"],
+    lastLogin: new Date(),
   },
 ]
 
-export const useAdminAuth = create<AdminAuthState>()(
-  persist(
-    (set, get) => ({
-      admin: null,
-      isAuthenticated: false,
-      login: async (username: string, password: string) => {
-        // Mock authentication
-        const admin = mockAdmins.find((a) => a.username === username && a.password === password)
+export function AdminAuthProvider({ children }: { children: ReactNode }) {
+  const [admin, setAdmin] = useState<Admin | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-        if (admin) {
-          const { password: _, ...adminData } = admin
-          set({
-            admin: { ...adminData, lastLogin: new Date().toISOString() },
-            isAuthenticated: true,
-          })
-          return true
-        }
-        return false
-      },
-      logout: () => {
-        set({ admin: null, isAuthenticated: false })
-      },
-      checkPermission: (permission: string) => {
-        const admin = get().admin
-        if (!admin) return false
-        if (admin.permissions.includes("all")) return true
-        return admin.permissions.includes(permission)
-      },
-    }),
-    {
-      name: "admin-auth",
-    },
-  ),
-)
+  useEffect(() => {
+    // Check if admin is already logged in (from localStorage)
+    const savedAdmin = localStorage.getItem("admin")
+    if (savedAdmin) {
+      try {
+        const adminData = JSON.parse(savedAdmin)
+        setAdmin(adminData)
+        setIsAuthenticated(true)
+      } catch (error) {
+        localStorage.removeItem("admin")
+      }
+    }
+  }, [])
+
+  const login = async (username: string, password: string): Promise<boolean> => {
+    // In real app, this would be an API call
+    const foundAdmin = mockAdmins.find((a) => a.username === username && a.password === password)
+
+    if (foundAdmin) {
+      const adminData: Admin = {
+        id: foundAdmin.id,
+        username: foundAdmin.username,
+        email: foundAdmin.email,
+        role: foundAdmin.role,
+        permissions: foundAdmin.permissions,
+        lastLogin: new Date(),
+      }
+
+      setAdmin(adminData)
+      setIsAuthenticated(true)
+      localStorage.setItem("admin", JSON.stringify(adminData))
+      return true
+    }
+
+    return false
+  }
+
+  const logout = () => {
+    setAdmin(null)
+    setIsAuthenticated(false)
+    localStorage.removeItem("admin")
+  }
+
+  const hasPermission = (permission: string): boolean => {
+    if (!admin) return false
+    if (admin.permissions.includes("*")) return true // Super admin
+    return admin.permissions.includes(permission)
+  }
+
+  return (
+    <AdminAuthContext.Provider
+      value={{
+        admin,
+        isAuthenticated,
+        login,
+        logout,
+        hasPermission,
+      }}
+    >
+      {children}
+    </AdminAuthContext.Provider>
+  )
+}
+
+export function useAdminAuth() {
+  const context = useContext(AdminAuthContext)
+  if (context === undefined) {
+    throw new Error("useAdminAuth must be used within an AdminAuthProvider")
+  }
+  return context
+}

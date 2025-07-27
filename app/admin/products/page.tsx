@@ -5,25 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Search,
   Filter,
   Plus,
-  MoreHorizontal,
   Eye,
   Edit,
   Trash2,
+  MoreHorizontal,
   Package,
-  TrendingUp,
-  TrendingDown,
   AlertTriangle,
+  TrendingUp,
   Download,
-  Upload,
   ImageIcon,
 } from "lucide-react"
 import { useState } from "react"
@@ -33,129 +31,126 @@ export default function AdminProducts() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   const products = [
     {
-      id: "1",
-      name: "SHAREINFO Premium - Full Customized Card",
+      id: "PRD-001",
+      name: "Premium NFC Card",
+      description: "High-quality NFC card with custom design and premium materials",
+      category: "NFC Cards",
       price: 1699.15,
-      originalPrice: 1999.0,
-      discount: 15,
-      image: "/placeholder.svg?height=100&width=100",
-      category: "premium",
-      description:
-        "Premium NFC business card with full customization options, premium materials, and advanced features.",
-      features: [
-        "Full Custom Design",
-        "Premium Materials",
-        "Advanced NFC Technology",
-        "Unlimited Contact Fields",
-        "Analytics Dashboard",
-        "Priority Support",
-      ],
-      inStock: true,
-      stockQuantity: 150,
-      lowStockThreshold: 20,
-      rating: 4.8,
-      reviews: 124,
-      sales: 89,
-      revenue: 151232.35,
-      status: "active",
-      createdDate: "2024-01-01",
-      lastUpdated: "2024-01-25",
-    },
-    {
-      id: "2",
-      name: "SHAREINFO Standard - Semi Customized Card",
-      price: 1274.15,
-      originalPrice: 1499.0,
-      discount: 15,
-      image: "/placeholder.svg?height=100&width=100",
-      category: "standard",
-      description: "Standard NFC business card with semi-customization options and essential features.",
-      features: [
-        "Semi-Custom Design",
-        "Standard Materials",
-        "NFC Technology",
-        "Contact Fields",
-        "Basic Analytics",
-        "Email Support",
-      ],
-      inStock: true,
-      stockQuantity: 75,
-      lowStockThreshold: 25,
-      rating: 4.5,
-      reviews: 89,
-      sales: 156,
-      revenue: 198767.4,
-      status: "active",
-      createdDate: "2024-01-01",
-      lastUpdated: "2024-01-20",
-    },
-    {
-      id: "3",
-      name: "SHAREINFO Classic Card",
-      price: 849.15,
-      originalPrice: 999.0,
-      discount: 15,
-      image: "/placeholder.svg?height=100&width=100",
-      category: "classic",
-      description: "Classic NFC business card with basic features and affordable pricing.",
-      features: [
-        "Basic Design Templates",
-        "Standard Materials",
-        "Basic NFC Technology",
-        "Essential Contact Fields",
-        "Basic Profile",
-        "Community Support",
-      ],
-      inStock: true,
-      stockQuantity: 12,
-      lowStockThreshold: 15,
-      rating: 4.2,
-      reviews: 156,
-      sales: 234,
-      revenue: 198701.1,
-      status: "active",
-      createdDate: "2024-01-01",
-      lastUpdated: "2024-01-22",
-    },
-    {
-      id: "4",
-      name: "SHAREINFO Women Professional Card",
-      price: 1399.15,
-      originalPrice: 1649.0,
-      discount: 15,
-      image: "/placeholder.svg?height=100&width=100",
-      category: "women",
-      description: "Specially designed NFC business card for professional women with elegant designs.",
-      features: [
-        "Elegant Women-Focused Designs",
-        "Premium Materials",
-        "Advanced NFC Technology",
-        "Social Media Integration",
-        "Portfolio Showcase",
-        "Priority Support",
-      ],
-      inStock: false,
-      stockQuantity: 0,
+      stock: 45,
       lowStockThreshold: 10,
-      rating: 4.7,
-      reviews: 67,
-      sales: 45,
-      revenue: 62961.75,
-      status: "out_of_stock",
-      createdDate: "2024-01-05",
-      lastUpdated: "2024-01-26",
+      sold: 127,
+      revenue: 215853.05,
+      status: "active",
+      image: "/placeholder.svg?height=60&width=60",
+      sku: "NFC-PREM-001",
+      weight: "5g",
+      dimensions: "85.6 × 53.98 × 0.76 mm",
+      createdDate: "2024-01-15",
+    },
+    {
+      id: "PRD-002",
+      name: "Standard NFC Card",
+      description: "Standard NFC card with basic features and good quality",
+      category: "NFC Cards",
+      price: 1274.15,
+      stock: 8,
+      lowStockThreshold: 10,
+      sold: 89,
+      revenue: 113399.35,
+      status: "active",
+      image: "/placeholder.svg?height=60&width=60",
+      sku: "NFC-STD-001",
+      weight: "4g",
+      dimensions: "85.6 × 53.98 × 0.76 mm",
+      createdDate: "2024-01-15",
+    },
+    {
+      id: "PRD-003",
+      name: "Custom Design Service",
+      description: "Professional custom design service for NFC cards",
+      category: "Services",
+      price: 500.0,
+      stock: 999,
+      lowStockThreshold: 0,
+      sold: 45,
+      revenue: 22500.0,
+      status: "active",
+      image: "/placeholder.svg?height=60&width=60",
+      sku: "SRV-DESIGN-001",
+      weight: "0g",
+      dimensions: "Digital Service",
+      createdDate: "2024-01-15",
+    },
+    {
+      id: "PRD-004",
+      name: "QR Code Generation",
+      description: "QR code generation service with analytics",
+      category: "Services",
+      price: 299.0,
+      stock: 999,
+      lowStockThreshold: 0,
+      sold: 78,
+      revenue: 23322.0,
+      status: "active",
+      image: "/placeholder.svg?height=60&width=60",
+      sku: "SRV-QR-001",
+      weight: "0g",
+      dimensions: "Digital Service",
+      createdDate: "2024-01-20",
+    },
+    {
+      id: "PRD-005",
+      name: "Bulk NFC Cards (10 Pack)",
+      description: "Bulk pack of 10 standard NFC cards with discount",
+      category: "NFC Cards",
+      price: 11500.0,
+      stock: 2,
+      lowStockThreshold: 5,
+      sold: 12,
+      revenue: 138000.0,
+      status: "low_stock",
+      image: "/placeholder.svg?height=60&width=60",
+      sku: "NFC-BULK-10",
+      weight: "40g",
+      dimensions: "85.6 × 53.98 × 0.76 mm (each)",
+      createdDate: "2024-01-22",
     },
   ]
 
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase()),
+      product.sku.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  const getStatusColor = (status: string, stock: number, threshold: number) => {
+    if (stock <= threshold && threshold > 0) {
+      return "bg-red-100 text-red-800"
+    }
+    switch (status) {
+      case "active":
+        return "bg-green-100 text-green-800"
+      case "inactive":
+        return "bg-gray-100 text-gray-800"
+      case "out_of_stock":
+        return "bg-red-100 text-red-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusText = (status: string, stock: number, threshold: number) => {
+    if (stock <= threshold && threshold > 0) {
+      return "Low Stock"
+    }
+    if (stock === 0) {
+      return "Out of Stock"
+    }
+    return status === "active" ? "Active" : "Inactive"
+  }
 
   const handleViewProduct = (product: any) => {
     setSelectedProduct(product)
@@ -171,19 +166,10 @@ export default function AdminProducts() {
     console.log("Delete product:", productId)
   }
 
-  const handleUpdateStock = (productId: string, newStock: number) => {
-    console.log("Update stock:", productId, newStock)
-  }
-
-  const getStockStatus = (product: any) => {
-    if (!product.inStock || product.stockQuantity === 0) {
-      return { status: "Out of Stock", color: "bg-red-100 text-red-800" }
-    } else if (product.stockQuantity <= product.lowStockThreshold) {
-      return { status: "Low Stock", color: "bg-yellow-100 text-yellow-800" }
-    } else {
-      return { status: "In Stock", color: "bg-green-100 text-green-800" }
-    }
-  }
+  const totalProducts = products.length
+  const activeProducts = products.filter((p) => p.status === "active").length
+  const lowStockProducts = products.filter((p) => p.stock <= p.lowStockThreshold && p.lowStockThreshold > 0).length
+  const totalRevenue = products.reduce((sum, p) => sum + p.revenue, 0)
 
   return (
     <AdminLayout>
@@ -199,11 +185,7 @@ export default function AdminProducts() {
               <Download className="w-4 h-4 mr-2" />
               Export Products
             </Button>
-            <Button variant="outline">
-              <Upload className="w-4 h-4 mr-2" />
-              Import Products
-            </Button>
-            <Button className="bg-orange-500 hover:bg-orange-600" onClick={() => setIsAddDialogOpen(true)}>
+            <Button className="bg-orange-500 hover:bg-orange-600">
               <Plus className="w-4 h-4 mr-2" />
               Add Product
             </Button>
@@ -216,8 +198,8 @@ export default function AdminProducts() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
+                  <p className="text-2xl font-bold">{totalProducts}</p>
                   <p className="text-sm text-gray-600">Total Products</p>
-                  <p className="text-2xl font-bold">{products.length}</p>
                 </div>
                 <Package className="w-8 h-8 text-blue-500" />
               </div>
@@ -227,10 +209,8 @@ export default function AdminProducts() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">In Stock</p>
-                  <p className="text-2xl font-bold text-green-500">
-                    {products.filter((p) => p.inStock && p.stockQuantity > 0).length}
-                  </p>
+                  <p className="text-2xl font-bold text-green-500">{activeProducts}</p>
+                  <p className="text-sm text-gray-600">Active Products</p>
                 </div>
                 <TrendingUp className="w-8 h-8 text-green-500" />
               </div>
@@ -240,12 +220,10 @@ export default function AdminProducts() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
+                  <p className="text-2xl font-bold text-red-500">{lowStockProducts}</p>
                   <p className="text-sm text-gray-600">Low Stock</p>
-                  <p className="text-2xl font-bold text-yellow-500">
-                    {products.filter((p) => p.stockQuantity <= p.lowStockThreshold && p.stockQuantity > 0).length}
-                  </p>
                 </div>
-                <AlertTriangle className="w-8 h-8 text-yellow-500" />
+                <AlertTriangle className="w-8 h-8 text-red-500" />
               </div>
             </CardContent>
           </Card>
@@ -253,12 +231,10 @@ export default function AdminProducts() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Out of Stock</p>
-                  <p className="text-2xl font-bold text-red-500">
-                    {products.filter((p) => !p.inStock || p.stockQuantity === 0).length}
-                  </p>
+                  <p className="text-2xl font-bold text-purple-500">৳{totalRevenue.toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">Total Revenue</p>
                 </div>
-                <TrendingDown className="w-8 h-8 text-red-500" />
+                <TrendingUp className="w-8 h-8 text-purple-500" />
               </div>
             </CardContent>
           </Card>
@@ -291,97 +267,75 @@ export default function AdminProducts() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Product</TableHead>
+                  <TableHead>SKU</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Stock</TableHead>
-                  <TableHead>Sales</TableHead>
+                  <TableHead>Sold</TableHead>
                   <TableHead>Revenue</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredProducts.map((product) => {
-                  const stockStatus = getStockStatus(product)
-                  return (
-                    <TableRow key={product.id}>
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <img
-                            src={product.image || "/placeholder.svg"}
-                            alt={product.name}
-                            className="w-12 h-12 rounded-lg object-cover"
-                          />
-                          <div>
-                            <p className="font-medium">{product.name}</p>
-                            <p className="text-sm text-gray-500">
-                              ⭐ {product.rating} ({product.reviews} reviews)
-                            </p>
-                          </div>
+                {filteredProducts.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <ImageIcon className="w-6 h-6 text-gray-400" />
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className="capitalize">
-                          {product.category}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
                         <div>
-                          <p className="font-medium">৳{product.price.toLocaleString()}</p>
-                          {product.originalPrice && (
-                            <p className="text-sm text-gray-500 line-through">
-                              ৳{product.originalPrice.toLocaleString()}
-                            </p>
-                          )}
+                          <p className="font-medium">{product.name}</p>
+                          <p className="text-sm text-gray-500 truncate max-w-xs">{product.description}</p>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{product.stockQuantity}</p>
-                          <div
-                            className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${stockStatus.color}`}
-                          >
-                            {stockStatus.status}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{product.sales}</TableCell>
-                      <TableCell>৳{product.revenue.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <Badge variant={product.status === "active" ? "default" : "secondary"}>
-                          {product.status.replace("_", " ")}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleViewProduct(product)}>
-                              <Eye className="w-4 h-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEditProduct(product)}>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Edit Product
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleUpdateStock(product.id, product.stockQuantity + 10)}>
-                              <Package className="w-4 h-4 mr-2" />
-                              Update Stock
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDeleteProduct(product.id)} className="text-red-600">
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete Product
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-sm">{product.sku}</TableCell>
+                    <TableCell>{product.category}</TableCell>
+                    <TableCell>৳{product.price.toLocaleString()}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <span className={product.stock <= product.lowStockThreshold ? "text-red-600 font-medium" : ""}>
+                          {product.stock}
+                        </span>
+                        {product.stock <= product.lowStockThreshold && product.lowStockThreshold > 0 && (
+                          <AlertTriangle className="w-4 h-4 text-red-500" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>{product.sold}</TableCell>
+                    <TableCell>৳{product.revenue.toLocaleString()}</TableCell>
+                    <TableCell>
+                      <Badge className={getStatusColor(product.status, product.stock, product.lowStockThreshold)}>
+                        {getStatusText(product.status, product.stock, product.lowStockThreshold)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewProduct(product)}>
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEditProduct(product)}>
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit Product
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleDeleteProduct(product.id)} className="text-red-600">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete Product
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
@@ -389,76 +343,75 @@ export default function AdminProducts() {
 
         {/* View Product Dialog */}
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>Product Details</DialogTitle>
             </DialogHeader>
             {selectedProduct && (
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <img
-                      src={selectedProduct.image || "/placeholder.svg"}
-                      alt={selectedProduct.name}
-                      className="w-full h-64 object-cover rounded-lg"
-                    />
+                <div className="flex items-start space-x-4">
+                  <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <ImageIcon className="w-12 h-12 text-gray-400" />
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-2xl font-bold">{selectedProduct.name}</h3>
-                      <Badge variant="secondary" className="capitalize mt-2">
-                        {selectedProduct.category}
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold">{selectedProduct.name}</h3>
+                    <p className="text-gray-600 mt-1">{selectedProduct.description}</p>
+                    <div className="flex items-center space-x-2 mt-2">
+                      <Badge
+                        className={getStatusColor(
+                          selectedProduct.status,
+                          selectedProduct.stock,
+                          selectedProduct.lowStockThreshold,
+                        )}
+                      >
+                        {getStatusText(
+                          selectedProduct.status,
+                          selectedProduct.stock,
+                          selectedProduct.lowStockThreshold,
+                        )}
                       </Badge>
-                    </div>
-                    <div>
-                      <p className="text-3xl font-bold text-orange-500">৳{selectedProduct.price.toLocaleString()}</p>
-                      {selectedProduct.originalPrice && (
-                        <p className="text-lg text-gray-500 line-through">
-                          ৳{selectedProduct.originalPrice.toLocaleString()}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-gray-600">{selectedProduct.description}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Features:</h4>
-                      <ul className="list-disc list-inside space-y-1">
-                        {selectedProduct.features.map((feature: string, index: number) => (
-                          <li key={index} className="text-sm text-gray-600">
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
+                      <Badge variant="outline">{selectedProduct.category}</Badge>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4">
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold">{selectedProduct.stockQuantity}</p>
-                      <p className="text-sm text-gray-600">Stock Quantity</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold">{selectedProduct.sales}</p>
-                      <p className="text-sm text-gray-600">Total Sales</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold">৳{selectedProduct.revenue.toLocaleString()}</p>
-                      <p className="text-sm text-gray-600">Revenue</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold">{selectedProduct.rating}</p>
-                      <p className="text-sm text-gray-600">Rating ({selectedProduct.reviews})</p>
-                    </CardContent>
-                  </Card>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>SKU</Label>
+                    <p className="text-sm font-mono">{selectedProduct.sku}</p>
+                  </div>
+                  <div>
+                    <Label>Price</Label>
+                    <p className="text-sm">৳{selectedProduct.price.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <Label>Stock Quantity</Label>
+                    <p className="text-sm">{selectedProduct.stock} units</p>
+                  </div>
+                  <div>
+                    <Label>Low Stock Threshold</Label>
+                    <p className="text-sm">{selectedProduct.lowStockThreshold} units</p>
+                  </div>
+                  <div>
+                    <Label>Total Sold</Label>
+                    <p className="text-sm">{selectedProduct.sold} units</p>
+                  </div>
+                  <div>
+                    <Label>Total Revenue</Label>
+                    <p className="text-sm">৳{selectedProduct.revenue.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <Label>Weight</Label>
+                    <p className="text-sm">{selectedProduct.weight}</p>
+                  </div>
+                  <div>
+                    <Label>Dimensions</Label>
+                    <p className="text-sm">{selectedProduct.dimensions}</p>
+                  </div>
+                  <div>
+                    <Label>Created Date</Label>
+                    <p className="text-sm">{selectedProduct.createdDate}</p>
+                  </div>
                 </div>
               </div>
             )}
@@ -479,16 +432,24 @@ export default function AdminProducts() {
                     <Input id="name" defaultValue={selectedProduct.name} />
                   </div>
                   <div>
-                    <Label htmlFor="category">Category</Label>
-                    <Input id="category" defaultValue={selectedProduct.category} />
+                    <Label htmlFor="sku">SKU</Label>
+                    <Input id="sku" defaultValue={selectedProduct.sku} />
                   </div>
                   <div>
-                    <Label htmlFor="price">Price</Label>
+                    <Label htmlFor="price">Price (৳)</Label>
                     <Input id="price" type="number" defaultValue={selectedProduct.price} />
                   </div>
                   <div>
                     <Label htmlFor="stock">Stock Quantity</Label>
-                    <Input id="stock" type="number" defaultValue={selectedProduct.stockQuantity} />
+                    <Input id="stock" type="number" defaultValue={selectedProduct.stock} />
+                  </div>
+                  <div>
+                    <Label htmlFor="category">Category</Label>
+                    <Input id="category" defaultValue={selectedProduct.category} />
+                  </div>
+                  <div>
+                    <Label htmlFor="threshold">Low Stock Threshold</Label>
+                    <Input id="threshold" type="number" defaultValue={selectedProduct.lowStockThreshold} />
                   </div>
                 </div>
                 <div>
@@ -503,55 +464,6 @@ export default function AdminProducts() {
                 </div>
               </div>
             )}
-          </DialogContent>
-        </Dialog>
-
-        {/* Add Product Dialog */}
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Add New Product</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="new-name">Product Name</Label>
-                  <Input id="new-name" placeholder="Enter product name" />
-                </div>
-                <div>
-                  <Label htmlFor="new-category">Category</Label>
-                  <Input id="new-category" placeholder="Enter category" />
-                </div>
-                <div>
-                  <Label htmlFor="new-price">Price</Label>
-                  <Input id="new-price" type="number" placeholder="Enter price" />
-                </div>
-                <div>
-                  <Label htmlFor="new-stock">Stock Quantity</Label>
-                  <Input id="new-stock" type="number" placeholder="Enter stock quantity" />
-                </div>
-              </div>
-              <div>
-                <Label htmlFor="new-description">Description</Label>
-                <Textarea id="new-description" placeholder="Enter product description" />
-              </div>
-              <div>
-                <Label htmlFor="new-image">Product Image</Label>
-                <div className="flex items-center space-x-2">
-                  <Input id="new-image" type="file" accept="image/*" />
-                  <Button variant="outline" size="sm">
-                    <ImageIcon className="w-4 h-4 mr-2" />
-                    Upload
-                  </Button>
-                </div>
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button className="bg-orange-500 hover:bg-orange-600">Add Product</Button>
-              </div>
-            </div>
           </DialogContent>
         </Dialog>
       </div>

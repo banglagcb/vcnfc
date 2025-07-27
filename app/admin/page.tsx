@@ -1,28 +1,34 @@
 "use client"
 
+import { useEffect } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Package, ShoppingCart, TrendingUp, Eye, Edit, Plus, Search, Filter, Download } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAdminAuth } from "@/lib/admin-auth"
+import { AdminAuthProvider } from "@/lib/admin-auth"
 
 export default function AdminPage() {
-  const { isAuthenticated } = useAdminAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/admin/dashboard")
-    } else {
-      router.push("/admin/login")
-    }
-  }, [isAuthenticated, router])
+    router.push("/admin/dashboard")
+  }, [router])
 
-  return null
+  return (
+    <AdminAuthProvider>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Redirecting to Admin Dashboard...</h1>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
+        </div>
+      </div>
+    </AdminAuthProvider>
+  )
 }
 
 function AdminDashboard() {

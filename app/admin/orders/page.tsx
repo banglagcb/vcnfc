@@ -8,19 +8,21 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 import {
   Search,
   Filter,
-  MoreHorizontal,
   Eye,
   Edit,
   Truck,
-  Package,
   CheckCircle,
-  XCircle,
   Clock,
+  AlertCircle,
+  MoreHorizontal,
   Download,
-  Printer,
+  Package,
+  CreditCard,
+  MapPin,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -31,60 +33,73 @@ export default function AdminOrders() {
 
   const orders = [
     {
-      id: "ORD-001",
+      id: "ORD-1234",
       customer: "Ahmed Hassan",
       email: "ahmed@example.com",
       phone: "+880 1712-345678",
-      products: [{ name: "SHAREINFO Premium Card", quantity: 2, price: 1699.15 }],
-      total: 3398.3,
+      products: [
+        { name: "Premium NFC Card", quantity: 2, price: 1699.15 },
+        { name: "Custom Design", quantity: 1, price: 500.0 },
+      ],
+      total: 3898.3,
       status: "processing",
       paymentStatus: "paid",
-      shippingAddress: "House 123, Road 456, Dhaka-1000",
+      paymentMethod: "bKash",
       orderDate: "2024-01-27",
-      estimatedDelivery: "2024-02-03",
-      trackingNumber: "TRK-001234567",
+      shippingAddress: "123 Main St, Dhaka, Bangladesh",
+      trackingNumber: "TRK123456789",
+      notes: "Customer requested express delivery",
     },
     {
-      id: "ORD-002",
+      id: "ORD-1235",
       customer: "Sarah Khan",
       email: "sarah@example.com",
       phone: "+880 1812-345678",
-      products: [{ name: "SHAREINFO Standard Card", quantity: 1, price: 1274.15 }],
+      products: [{ name: "Standard NFC Card", quantity: 1, price: 1274.15 }],
       total: 1274.15,
       status: "shipped",
       paymentStatus: "paid",
-      shippingAddress: "Flat 789, Building ABC, Chittagong-4000",
+      paymentMethod: "Nagad",
       orderDate: "2024-01-26",
-      estimatedDelivery: "2024-02-02",
-      trackingNumber: "TRK-001234568",
+      shippingAddress: "456 Oak Ave, Chittagong, Bangladesh",
+      trackingNumber: "TRK123456790",
+      notes: "",
     },
     {
-      id: "ORD-003",
+      id: "ORD-1236",
       customer: "Mohammad Ali",
       email: "ali@example.com",
       phone: "+880 1912-345678",
-      products: [{ name: "SHAREINFO Classic Card", quantity: 3, price: 849.15 }],
-      total: 2547.45,
-      status: "delivered",
-      paymentStatus: "paid",
-      shippingAddress: "Village XYZ, Sylhet-3100",
-      orderDate: "2024-01-25",
-      estimatedDelivery: "2024-02-01",
-      trackingNumber: "TRK-001234569",
+      products: [
+        { name: "Premium NFC Card", quantity: 1, price: 1699.15 },
+        { name: "QR Code Generation", quantity: 1, price: 299.0 },
+      ],
+      total: 1998.15,
+      status: "pending",
+      paymentStatus: "pending",
+      paymentMethod: "Bank Transfer",
+      orderDate: "2024-01-27",
+      shippingAddress: "789 Pine St, Sylhet, Bangladesh",
+      trackingNumber: "",
+      notes: "Waiting for payment confirmation",
     },
     {
-      id: "ORD-004",
+      id: "ORD-1237",
       customer: "Fatima Rahman",
       email: "fatima@example.com",
       phone: "+880 1612-345678",
-      products: [{ name: "SHAREINFO Women Professional Card", quantity: 1, price: 1399.15 }],
-      total: 1399.15,
-      status: "pending",
-      paymentStatus: "pending",
-      shippingAddress: "House 456, Rajshahi-6000",
-      orderDate: "2024-01-27",
-      estimatedDelivery: "2024-02-05",
-      trackingNumber: null,
+      products: [
+        { name: "Premium NFC Card", quantity: 3, price: 1699.15 },
+        { name: "Custom Design", quantity: 2, price: 500.0 },
+      ],
+      total: 6097.45,
+      status: "delivered",
+      paymentStatus: "paid",
+      paymentMethod: "Rocket",
+      orderDate: "2024-01-25",
+      shippingAddress: "321 Elm St, Rajshahi, Bangladesh",
+      trackingNumber: "TRK123456791",
+      notes: "Bulk order for company",
     },
   ]
 
@@ -93,23 +108,6 @@ export default function AdminOrders() {
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customer.toLowerCase().includes(searchTerm.toLowerCase()),
   )
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "pending":
-        return <Clock className="w-4 h-4" />
-      case "processing":
-        return <Package className="w-4 h-4" />
-      case "shipped":
-        return <Truck className="w-4 h-4" />
-      case "delivered":
-        return <CheckCircle className="w-4 h-4" />
-      case "cancelled":
-        return <XCircle className="w-4 h-4" />
-      default:
-        return <Clock className="w-4 h-4" />
-    }
-  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -128,13 +126,44 @@ export default function AdminOrders() {
     }
   }
 
+  const getPaymentStatusColor = (status: string) => {
+    switch (status) {
+      case "paid":
+        return "bg-green-100 text-green-800"
+      case "pending":
+        return "bg-yellow-100 text-yellow-800"
+      case "failed":
+        return "bg-red-100 text-red-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "pending":
+        return <Clock className="w-4 h-4" />
+      case "processing":
+        return <Package className="w-4 h-4" />
+      case "shipped":
+        return <Truck className="w-4 h-4" />
+      case "delivered":
+        return <CheckCircle className="w-4 h-4" />
+      case "cancelled":
+        return <AlertCircle className="w-4 h-4" />
+      default:
+        return <Clock className="w-4 h-4" />
+    }
+  }
+
   const handleViewOrder = (order: any) => {
     setSelectedOrder(order)
     setIsViewDialogOpen(true)
   }
 
-  const handleUpdateStatus = (orderId: string, newStatus: string) => {
+  const handleStatusUpdate = (orderId: string, newStatus: string) => {
     console.log("Update order status:", orderId, newStatus)
+    // In real app, this would update the order status
   }
 
   return (
@@ -151,15 +180,11 @@ export default function AdminOrders() {
               <Download className="w-4 h-4 mr-2" />
               Export Orders
             </Button>
-            <Button variant="outline">
-              <Printer className="w-4 h-4 mr-2" />
-              Print Labels
-            </Button>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
               <div className="text-center">
@@ -185,16 +210,6 @@ export default function AdminOrders() {
                   {orders.filter((o) => o.status === "processing").length}
                 </p>
                 <p className="text-sm text-gray-600">Processing</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-purple-500">
-                  {orders.filter((o) => o.status === "shipped").length}
-                </p>
-                <p className="text-sm text-gray-600">Shipped</p>
               </div>
             </CardContent>
           </Card>
@@ -257,27 +272,29 @@ export default function AdminOrders() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div>
+                      <div className="space-y-1">
                         {order.products.map((product, index) => (
-                          <p key={index} className="text-sm">
+                          <div key={index} className="text-sm">
                             {product.name} x{product.quantity}
-                          </p>
+                          </div>
                         ))}
                       </div>
                     </TableCell>
                     <TableCell>৳{order.total.toLocaleString()}</TableCell>
                     <TableCell>
-                      <div
-                        className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
-                      >
+                      <Badge className={getStatusColor(order.status)}>
                         {getStatusIcon(order.status)}
-                        <span className="capitalize">{order.status}</span>
-                      </div>
+                        <span className="ml-1 capitalize">{order.status}</span>
+                      </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={order.paymentStatus === "paid" ? "default" : "secondary"}>
-                        {order.paymentStatus}
-                      </Badge>
+                      <div className="space-y-1">
+                        <Badge className={getPaymentStatusColor(order.paymentStatus)}>
+                          <CreditCard className="w-3 h-3 mr-1" />
+                          {order.paymentStatus}
+                        </Badge>
+                        <p className="text-xs text-gray-500">{order.paymentMethod}</p>
+                      </div>
                     </TableCell>
                     <TableCell>{order.orderDate}</TableCell>
                     <TableCell>
@@ -292,17 +309,13 @@ export default function AdminOrders() {
                             <Eye className="w-4 h-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateStatus(order.id, "processing")}>
+                          <DropdownMenuItem onClick={() => handleStatusUpdate(order.id, "processing")}>
                             <Edit className="w-4 h-4 mr-2" />
                             Update Status
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Truck className="w-4 h-4 mr-2" />
                             Track Order
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Printer className="w-4 h-4 mr-2" />
-                            Print Invoice
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -314,7 +327,7 @@ export default function AdminOrders() {
           </CardContent>
         </Card>
 
-        {/* Order Details Dialog */}
+        {/* View Order Dialog */}
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-4xl">
             <DialogHeader>
@@ -322,109 +335,107 @@ export default function AdminOrders() {
             </DialogHeader>
             {selectedOrder && (
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
-                  {/* Customer Info */}
+                {/* Order Status */}
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <Badge className={getStatusColor(selectedOrder.status)}>
+                      {getStatusIcon(selectedOrder.status)}
+                      <span className="ml-1 capitalize">{selectedOrder.status}</span>
+                    </Badge>
+                    <Badge className={getPaymentStatusColor(selectedOrder.paymentStatus)}>
+                      <CreditCard className="w-3 h-3 mr-1" />
+                      {selectedOrder.paymentStatus}
+                    </Badge>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">Order Date</p>
+                    <p className="font-medium">{selectedOrder.orderDate}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Customer Information */}
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-lg">Customer Information</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                      <p>
-                        <strong>Name:</strong> {selectedOrder.customer}
-                      </p>
-                      <p>
-                        <strong>Email:</strong> {selectedOrder.email}
-                      </p>
-                      <p>
-                        <strong>Phone:</strong> {selectedOrder.phone}
-                      </p>
-                      <p>
-                        <strong>Address:</strong> {selectedOrder.shippingAddress}
-                      </p>
+                    <CardContent className="space-y-3">
+                      <div>
+                        <Label>Name</Label>
+                        <p className="text-sm">{selectedOrder.customer}</p>
+                      </div>
+                      <div>
+                        <Label>Email</Label>
+                        <p className="text-sm">{selectedOrder.email}</p>
+                      </div>
+                      <div>
+                        <Label>Phone</Label>
+                        <p className="text-sm">{selectedOrder.phone}</p>
+                      </div>
+                      <div>
+                        <Label>Shipping Address</Label>
+                        <div className="flex items-start space-x-2">
+                          <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
+                          <p className="text-sm">{selectedOrder.shippingAddress}</p>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
 
-                  {/* Order Info */}
+                  {/* Order Summary */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-lg">Order Information</CardTitle>
+                      <CardTitle className="text-lg">Order Summary</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                      <p>
-                        <strong>Order Date:</strong> {selectedOrder.orderDate}
-                      </p>
-                      <p>
-                        <strong>Status:</strong>
-                        <Badge className={`ml-2 ${getStatusColor(selectedOrder.status)}`}>{selectedOrder.status}</Badge>
-                      </p>
-                      <p>
-                        <strong>Payment:</strong>
-                        <Badge
-                          className="ml-2"
-                          variant={selectedOrder.paymentStatus === "paid" ? "default" : "secondary"}
-                        >
-                          {selectedOrder.paymentStatus}
-                        </Badge>
-                      </p>
-                      <p>
-                        <strong>Tracking:</strong> {selectedOrder.trackingNumber || "Not assigned"}
-                      </p>
-                      <p>
-                        <strong>Estimated Delivery:</strong> {selectedOrder.estimatedDelivery}
-                      </p>
+                    <CardContent className="space-y-3">
+                      <div className="space-y-2">
+                        {selectedOrder.products.map((product: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center py-2 border-b">
+                            <div>
+                              <p className="font-medium">{product.name}</p>
+                              <p className="text-sm text-gray-500">Quantity: {product.quantity}</p>
+                            </div>
+                            <p className="font-medium">৳{(product.price * product.quantity).toLocaleString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="pt-2 border-t">
+                        <div className="flex justify-between items-center">
+                          <p className="text-lg font-bold">Total</p>
+                          <p className="text-lg font-bold">৳{selectedOrder.total.toLocaleString()}</p>
+                        </div>
+                      </div>
+                      <div className="pt-2">
+                        <Label>Payment Method</Label>
+                        <p className="text-sm">{selectedOrder.paymentMethod}</p>
+                      </div>
+                      {selectedOrder.trackingNumber && (
+                        <div>
+                          <Label>Tracking Number</Label>
+                          <p className="text-sm font-mono">{selectedOrder.trackingNumber}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Products */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Order Items</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Product</TableHead>
-                          <TableHead>Quantity</TableHead>
-                          <TableHead>Price</TableHead>
-                          <TableHead>Total</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {selectedOrder.products.map((product: any, index: number) => (
-                          <TableRow key={index}>
-                            <TableCell>{product.name}</TableCell>
-                            <TableCell>{product.quantity}</TableCell>
-                            <TableCell>৳{product.price.toLocaleString()}</TableCell>
-                            <TableCell>৳{(product.price * product.quantity).toLocaleString()}</TableCell>
-                          </TableRow>
-                        ))}
-                        <TableRow>
-                          <TableCell colSpan={3} className="font-bold">
-                            Total
-                          </TableCell>
-                          <TableCell className="font-bold">৳{selectedOrder.total.toLocaleString()}</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
+                {/* Notes */}
+                {selectedOrder.notes && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Order Notes</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm">{selectedOrder.notes}</p>
+                    </CardContent>
+                  </Card>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex justify-end space-x-2">
-                  <Button variant="outline">
-                    <Printer className="w-4 h-4 mr-2" />
-                    Print Invoice
-                  </Button>
-                  <Button variant="outline">
-                    <Truck className="w-4 h-4 mr-2" />
-                    Update Tracking
-                  </Button>
-                  <Button className="bg-orange-500 hover:bg-orange-600">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Update Status
-                  </Button>
+                  <Button variant="outline">Print Invoice</Button>
+                  <Button variant="outline">Send Email</Button>
+                  <Button className="bg-orange-500 hover:bg-orange-600">Update Status</Button>
                 </div>
               </div>
             )}
